@@ -1,0 +1,247 @@
+/* Unitasker Style Sheet by Ryan Kulla */
+
+
+                            /* --- Misc. --- */
+
+h1 {
+    margin: 0;
+    text-align: center;
+}
+
+
+h2 {
+    font-size: 12px;
+    margin: 0;
+    font-style: italic;
+    text-align: center;
+}
+
+
+a, a#visited {
+    color: #0000FF;
+    font-size: .9em;
+}
+
+
+.larger-text {
+    font-size: 1.1em;
+}
+
+
+ul, ul li {
+    /* Change the identation size of lists */
+    margin: 3px;
+    padding: 0px;
+    list-style: none;
+}
+
+
+fieldset {
+    border: 1px #C0C0C0 solid;
+}
+
+
+legend {
+    font-size: 14px;
+}
+
+
+
+                            /* --- Task Bar --- */
+
+#task-input {
+    margin-top: 20px;
+}
+
+
+#current-task-text {
+    font-size: 2.3em;
+    font-weight: bold;
+    font-style: italic;
+    color: #E8DE80;
+}
+
+
+#timer-input {
+     display: none;
+     margin-bottom: 10px;
+}
+
+
+#usage-timer {
+     display: none;
+}
+
+
+#task-desc {
+    margin-bottom: 5px;
+}
+
+
+#current-task {
+    margin-bottom: 10px;
+    margin-top: 15px;
+    padding: 1px;
+    display: none;
+}
+
+
+#next-task-name {
+    margin-bottom: 15px;
+    padding: 1px;
+    display: none;
+}
+
+
+
+                            /* --- About --- */
+
+#about {
+    display: none; 
+}
+
+
+#about-button {
+    float: right;
+}
+
+
+
+                            /* --- Time Bar --- */
+
+#time-bar {
+    display: none;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+
+#update-time {
+    text-align: center;
+    color: #000000;
+    font-size: 3.5em;
+}
+
+
+
+                            /* --- Sound --- */
+
+#sound-check {
+    margin-top: 20px;
+}
+
+
+
+
+                            /* --- Notes --- */
+
+#notes {
+    float: left;
+    margin-top: 35px;
+    width: 225px;
+}
+
+
+#current-notes-input {
+    display: none;
+    text-align: center;
+}
+
+
+#next-notes-input {
+    display: none;
+    margin-top: 17px;
+    text-align: center;
+}
+
+
+#current-textarea {
+    border: none;
+    background-color: #FDFF80;
+    padding: 10px;
+}
+
+
+#next-textarea {
+    border: none;
+    background-color: #FDFF80;
+    padding: 10px;
+}
+
+
+
+
+                            /* --- Completed Tasks --- */
+
+#completed-tasks-log {
+    float: left;
+    padding: 5px;
+    margin-top: 40px;
+    border: 1px #C0C0C0 solid;
+    background: #F5D07B;
+    width: 650px;
+    height: 348px;
+
+    /* Have scroll bars if need be */
+    overflow: auto;    
+    white-space: nowrap;    
+}
+
+
+#completed-tasks-log h3 {
+    text-align: center;
+    text-decoration: underline;
+    font-size: 15px;
+}
+
+
+
+
+                            /* --- TODO Section --- */
+
+#todo {
+    float: left;
+    border: 1px #C0C0C0 solid;
+    width: 316px;
+    height: 358px;
+    margin-top: 40px;
+    margin-right: 15px;
+    margin-left: 20px;
+}
+
+
+#todo-list-heading {
+    padding: 1px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+
+#todo-task-input-desc {
+    margin-left: 2px;
+}
+
+
+#todo-task {
+    width: 205px;
+}
+
+
+#todo-list-box {
+    padding: 5px;
+    margin: 3px;
+    width: 300px;
+    height: 296px;
+
+    background: #F5D07B;
+
+    /* Have scroll bars if need be */
+    overflow: auto;    
+    white-space: nowrap;    
+}
+
+
+#next-link, #delete-link {
+    text-decoration: none;
+}

@@ -1,0 +1,13 @@
+
+Unitasking, aka monotasking, means focusing on one job, project, or goal at a time, completing that task, and moving on to the next one. Thus, it's the opposite of multi-tasking.
+
+Unitaskr is a simple productivity tool that allows you to set tasks you want to perform, just for today, and a time when you want to start performing them, then it alerts you when it's time to move to the next task.
+
+It's very easy to get caught up in one task so much that you lose track of time and never end up getting to all the tasks on your todo list. Unitaskr aims to solve this problem.
+
+The interface is designed to allow you to quickly enter new tasks, and optional notes about them.
+
+Manually starting the timer between each task allows you to take as long of a break between tasks as you want.
+
+You'll need to enable popups for unitaskr to be able to alert you. Unitaskr currently doesn't handle state, so if you refresh the page you will restart the program.
+
