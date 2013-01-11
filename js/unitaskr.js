@@ -1,7 +1,6 @@
 /*
  * Description: Unitaskr functions 
  * Author: Ryan Kulla (rkulla AT gmail)
- * Last modified: Aug, 26th 2009
  */
 
 
@@ -121,7 +120,7 @@ function alarm() {
     // Alert the user that the task is ready to begin
     if (unitaskrObj.hasInitialTask && !unitaskrObj.stop) {
         // Popup an alert window
-        window.open('unitaskr-alert.html?next-task=' + next_task_val);
+        window.open('media/template/unitaskr-alert.html?next-task=' + next_task_val);
     }
 
     unitaskrObj.stop = 0; // reset
@@ -164,9 +163,8 @@ function alarm() {
 }
 
 
+// Moves the next task's notes to the current task's notes
 function updateNotes() {
-
-    // Move the next task's notes to the current task's notes
     document.getElementById('current-textarea').value = 
              document.getElementById('next-textarea').value;
     document.getElementById('next-textarea').value = '';
@@ -236,10 +234,9 @@ function hideAbout() {
 }
 
 
+// Alert the user, on the popup page, that it's time to do a task.
+// Note: This function is called from the window.open()'d window.
 function task_alert() {
-    // Alert the user, on the popup page, that it's time to do a task.
-    // Note: This function is called from the window.open()'d window.
-    
     // Get the task value from the query string
     var url = decodeURI(location.href);
     var task = url.substring(url.indexOf("=") + 1);
@@ -248,7 +245,7 @@ function task_alert() {
         // Insert sound playing HTML via the DOM
         document.getElementById('play-sound').innerHTML = 
           '<embed src="alert-music.mid">' +
-          '<noembed><bgsound src="alert-music.mid"></noembed>';
+          '<noembed><bgsound src="../media/sound/alert-music.mid"></noembed>';
     }
 
     document.getElementById('task-alert-heading').innerHTML = "Time to " + 
@@ -346,4 +343,3 @@ function todo_add() {
 
     document.getElementById('todo-task').value = '';
 }
-
