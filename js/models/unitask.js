@@ -1,6 +1,6 @@
 var app = app || {};
 
-(function() {
+(function($) {
 	'use strict';
 
 	app.Unitask = Backbone.Model.extend({
@@ -10,4 +10,4 @@ var app = app || {};
 
 	});
 
-}());
+}(jQuery));

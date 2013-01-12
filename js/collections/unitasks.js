@@ -6,6 +6,7 @@ var app = app || {};
 	var UnitaskList = Backbone.Collection.extend({
 
 		model: app.Unitask,
+    });
 
 	app.Unitasks = new UnitaskList();
 
