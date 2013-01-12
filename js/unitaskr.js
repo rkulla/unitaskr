@@ -120,7 +120,7 @@ function alarm() {
     // Alert the user that the task is ready to begin
     if (unitaskrObj.hasInitialTask && !unitaskrObj.stop) {
         // Popup an alert window
-        window.open('media/template/unitaskr-alert.html?next-task=' + next_task_val);
+        window.open('assets/template/unitaskr-alert.html?next-task=' + next_task_val);
     }
 
     unitaskrObj.stop = 0; // reset
@@ -245,7 +245,7 @@ function task_alert() {
         // Insert sound playing HTML via the DOM
         document.getElementById('play-sound').innerHTML = 
           '<embed src="alert-music.mid">' +
-          '<noembed><bgsound src="../media/sound/alert-music.mid"></noembed>';
+          '<noembed><bgsound src="../assets/sound/alert-music.mid"></noembed>';
     }
 
     document.getElementById('task-alert-heading').innerHTML = "Time to " + 
