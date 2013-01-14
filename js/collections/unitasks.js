@@ -1,13 +1,13 @@
 var app = app || {};
 
 (function() {
-	'use strict';
+    'use strict';
 
-	var UnitaskList = Backbone.Collection.extend({
+    var UnitaskList = Backbone.Collection.extend({
 
-		model: app.Unitask,
+        model: app.Unitask,
     });
 
-	app.Unitasks = new UnitaskList();
+    app.Unitasks = new UnitaskList();
 
 }());

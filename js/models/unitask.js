@@ -1,13 +1,13 @@
 var app = app || {};
 
 (function($) {
-	'use strict';
+    'use strict';
 
-	app.Unitask = Backbone.Model.extend({
+    app.Unitask = Backbone.Model.extend({
 
-		defaults: {
-		},
+        defaults: {
+        },
 
-	});
+    });
 
 }(jQuery));
