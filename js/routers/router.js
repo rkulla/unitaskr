@@ -3,19 +3,17 @@ var app = app || {};
 (function() {
 	'use strict';
 
-	var Workspace = Backbone.Router.extend({
+	var Router = Backbone.Router.extend({
 		routes:{
-			'*filter': 'setFilter'
+            '': 'home',
 		},
-
-		setFilter: function(param) {
-			app.UnitaskFilter = param.trim() || '';
-
-			// app.Unitask.trigger('filter');
-		}
 	});
 
-	app.UnitaskRouter = new Workspace();
+	app.router = new Router();
+    app.router.on('route:home', function() {
+        console.log('Loaded home page');
+    });
+
 	Backbone.history.start();
 
 }());

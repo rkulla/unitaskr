@@ -221,17 +221,10 @@ function getTimeNow() {
                    minute + ':' + second + ' ' + ampm;
 }
 
-
-function showAbout() {
-    document.getElementById('about').style.display = 'block';
-    document.getElementById('about-button').style.display = 'none';
-}
-
-
-function hideAbout() {
-    document.getElementById('about').style.display = '';
-    document.getElementById('about-button').style.display = '';
-}
+// function hideAbout() {
+//     document.getElementById('about').style.display = '';
+//     document.getElementById('about-button').style.display = '';
+// }
 
 
 // Alert the user, on the popup page, that it's time to do a task.

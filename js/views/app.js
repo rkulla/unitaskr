@@ -1,17 +1,29 @@
 var app = app || {};
 
 $(function($) {
-	'use strict';
+    'use strict';
 
-	app.AppView = Backbone.View.extend({
+    app.AppView = Backbone.View.extend({
 
-		el: '#',
+        el: 'body',
 
-		initialize: function() {
-		},
+        events: {
+            'click #about-button': 'showAbout',
+        },
 
-		render: function() {
-		},
+        initialize: function() {
+            this.render();
+        },
 
-	});
+        render: function() {
+            var aboutButton = '<button id="about-button">About &rsaquo;</button>';
+            $('#about-container').append(aboutButton);
+        },
+
+        showAbout: function() {
+            var view = new app.AboutView();
+            view.render();
+        },
+
+    });
 });
