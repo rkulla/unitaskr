@@ -120,7 +120,7 @@ function alarm() {
     // Alert the user that the task is ready to begin
     if (unitaskrObj.hasInitialTask && !unitaskrObj.stop) {
         // Popup an alert window
-        window.open('assets/template/unitaskr-alert.html?next-task=' + next_task_val);
+        window.open('../templates/unitaskr-alert.html?next-task=' + next_task_val);
     }
 
     unitaskrObj.stop = 0; // reset
@@ -221,12 +221,6 @@ function getTimeNow() {
                    minute + ':' + second + ' ' + ampm;
 }
 
-// function hideAbout() {
-//     document.getElementById('about').style.display = '';
-//     document.getElementById('about-button').style.display = '';
-// }
-
-
 // Alert the user, on the popup page, that it's time to do a task.
 // Note: This function is called from the window.open()'d window.
 function task_alert() {
@@ -238,7 +232,7 @@ function task_alert() {
         // Insert sound playing HTML via the DOM
         document.getElementById('play-sound').innerHTML = 
           '<embed src="alert-music.mid">' +
-          '<noembed><bgsound src="../assets/sound/alert-music.mid"></noembed>';
+          '<noembed><bgsound src="../music/alert-music.mid"></noembed>';
     }
 
     document.getElementById('task-alert-heading').innerHTML = "Time to " + 
