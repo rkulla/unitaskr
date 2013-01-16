@@ -11,3 +11,17 @@ Manually starting the timer between each task allows you to take as long of a br
 
 You'll need to enable popups for unitaskr to be able to alert you. Unitaskr currently doesn't handle state, so if you refresh the page you will restart the program.
 
+
+Installing
+==========
+Change directories to the top of unitaskr and run:
+
+    $ npm install
+
+Running
+========
+Change directories to the top of unitaskr and run:
+
+    $ node app
+
+Now just go to http://localhost:3000 in your browser.
