@@ -31,12 +31,13 @@ block content
       | about these things, rather think constantly thinking about them the rest 
       | of the day, thus decreasing stress and improving concentration.
 
-    <button id='hide-about'>&lsaquo; Hide About</button>
-    <hr>
+    button#hide-about &lsaquo; Hide About
+    hr
 
   script
     $(document).on("submit", "form#taskbar", function(e) { 
-      e.preventDefault(); startTimer(); 
+      e.preventDefault(); 
+      startTimer(); 
     });
 
   #about-container
@@ -56,22 +57,22 @@ block content
     | when it's time to do the next task.
 
   div
-    form(name='taskbar', id='taskbar', action='')
+    form#taskbar(name='taskbar', action='')
       #task-bar
         #timer-input
           label(for='hours') Hours
-          input(type='text', id='hours', size='1', value='00')
+          input#hours(type='text', size='1', value='00')
           label(for='minutes') Minutes
-          input(type='text', id='minutes', size='1', value='00')
+          input#minutes(type='text', size='1', value='00')
           label(for='hours') Seconds
-          input(type='text', id='seconds', size='1', value='00')
+          input#seconds(type='text', size='1', value='00')
         #task-input
           strong#task-desc Current Task &nbsp;
-          input(type='text', id='task', placeholder='Task', autofocus)
-          input(type='submit', id='submit', value='Set')
+          input#task(type='text', placeholder='Task', autofocus)
+          input(type='submit', value='Set')
       div
         label(for='sound') Sound
-        input(type="checkbox", id="sound-check", title="Play sound with alarm", value="sound", checked)
+        input#sound-check(type="checkbox", title="Play sound with alarm", value="sound", checked)
       #time-bar
         span#update-time &nbsp;
         a(href='#', onclick='stopCountdown(); return false;') stop early &nbsp;
@@ -88,19 +89,19 @@ block content
     fieldset#current-notes-input
       legend Current Task Notes &nbsp;
         a(href='#', onclick='clear_current_notes(); return false;') [clear]
-      textarea(id='current-textarea', rows='6', cols='20')
+      textarea#current-textarea(rows='6', cols='20')
 
     fieldset#next-notes-input
       legend Next Task Notes &nbsp;
         a(href='#', onclick='clear_next_notes(); return false;') [clear]
-      textarea(id='next-textarea', rows='6', cols='20')
+      textarea#next-textarea(rows='6', cols='20')
 
   #todo
     #todo-list-heading To-Do List
     form(name='todoform', action='', onsubmit='todo_add(); return false;')
       span#todo-task-input-desc
         label(for='todo-task') Task 
-        input(type='text', id='todo-task')
+        input#todo-task(type='text')
       span
         input(type='submit', value='Add')
       #todo-list-box
