@@ -16,8 +16,9 @@ $(function($) {
         },
 
         render: function() {
-            var aboutButton = '<button id="about-button">About &rsaquo;</button>';
-            $('#about-container').append(aboutButton);
+            var aboutButton = $("#about-button-template").html();
+            var aboutButtonTemplate = _.template(aboutButton, {})
+            $('#about-container').append(aboutButtonTemplate);
         },
 
         showAbout: function() {
