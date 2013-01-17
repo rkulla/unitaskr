@@ -1,4 +1,6 @@
 
+Unitaskr is a productivity tool written in JavaScript and uses Backbone and Node.
+
 Unitasking, aka monotasking, means focusing on one job, project, or goal at a time, completing that task, and moving on to the next one. Thus, it's the opposite of multi-tasking.
 
 Unitaskr is a simple productivity tool that allows you to set tasks you want to perform, just for today, and a time when you want to start performing them, then it alerts you when it's time to move to the next task.
@@ -14,13 +16,13 @@ You'll need to enable popups for unitaskr to be able to alert you. Unitaskr curr
 
 Installing
 ==========
-Change directories to the top of unitaskr and run:
+Change directories to the top of unitaskr/ and run:
 
     $ npm install
 
 Running
 ========
-Change directories to the top of unitaskr and run:
+Change directories to the top of unitaskr/ and run:
 
     $ node app
 
