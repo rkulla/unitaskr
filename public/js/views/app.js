@@ -1,6 +1,6 @@
 var app = app || {};
 
-$(function($) {
+(function($) {
     'use strict';
 
     app.AppView = Backbone.View.extend({
@@ -8,7 +8,6 @@ $(function($) {
         el: 'body',
 
         events: {
-            'click #about-button': 'showAbout',
         },
 
         initialize: function() {
@@ -16,15 +15,9 @@ $(function($) {
         },
 
         render: function() {
-            var aboutButton = $("#about-button-template").html();
-            var aboutButtonTemplate = _.template(aboutButton, {})
-            $('#about-container').append(aboutButtonTemplate);
-        },
-
-        showAbout: function() {
-            var view = new app.AboutView();
+            var view = new app.AboutButtonView();
             view.render();
         },
 
     });
-});
+})(jQuery);
