@@ -43,20 +43,20 @@ block content
   #about-container
     #about
 
-  #current-task
-    span
-      strong Currently Set Task: &nbsp;
-    span#current-task-text ?
-    &nbsp;
-    span
-      a(href='#', onclick='edit_task("current-task-text", "Current Task"); return false') [edit]
+  div#taskbar-container
+    #current-task
+      span
+        strong Currently Set Task: &nbsp;
+      span#current-task-text ?
+      &nbsp;
+      span
+        a(href='#', data-target='current-task-text', data-msg='Current Task') [edit]
 
-  p#usage-no-timer Enter the first task.
-  p#usage-timer
-    | Enter the amount of time to spend doing the <em>current</em> task before being alerted
-    | when it's time to do the next task.
+    p#usage-no-timer Enter the first task.
+    p#usage-timer
+      | Enter the amount of time to spend doing the <em>current</em> task before being alerted
+      | when it's time to do the next task.
 
-  div
     form#taskbar(name='taskbar', action='')
       #task-bar
         #timer-input
@@ -78,12 +78,12 @@ block content
         a(href='#', onclick='stopCountdown(); return false;') stop early &nbsp;
         a(href='#', onclick='cancelCountdown(); return false;') cancel
 
-  #next-task-name
-    span
-      strong Next Task: &nbsp;
-    span#next-task .larger-text ? &nbsp;
-    span
-      a(href='#', onclick='edit_task("next-task", "Next Task"); return false;') [edit]
+    #next-task-name
+      span
+        strong Next Task: &nbsp;
+      span#next-task .larger-text ? &nbsp;
+      span
+        a(href='#', onclick='edit_task("next-task", "Next Task"); return false;') [edit]
 
   #notes
     fieldset#current-notes-input

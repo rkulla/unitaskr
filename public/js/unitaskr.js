@@ -252,34 +252,6 @@ function clear_next_notes() {
 }
 
 
-function edit_task(id_name, msg) {
-    var current = document.getElementById(id_name).innerHTML;
-
-    if (current.indexOf('\u2014') != -1) { // Edit next task
-        var new_task = 
-            prompt(msg, current.substring(0, current.indexOf('\u2014')));
-        if (new_task != null && new_task != '') {
-            new_task += ' \u2014 Counting down from: ' + 
-                        unitaskrObj.timeOnTask;
-        }
-    } else {
-        var new_task = prompt(msg, current); // Edit current task
-    }
-    
-    if (new_task == null) {
-        return false;
-    }
-        
-    if (new_task != '') {
-        document.getElementById(id_name).innerHTML = 
-            new_task;
-    } else {
-        alert('Please enter a task');
-        edit_task(id_name, msg);
-    }
-}
-
-
 function make_html_id(s) {
     // Change whitespace to dashes and up to 30 chars max.
     return s.replace(/\s/g, '-').substring(0, 30);

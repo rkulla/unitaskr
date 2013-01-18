@@ -15,8 +15,11 @@ var app = app || {};
         },
 
         render: function() {
-            var view = new app.AboutButtonView();
-            view.render();
+            var aboutButtonView = new app.AboutButtonView();
+            aboutButtonView.render();
+
+            var taskbarView = new app.TaskbarView();
+            taskbarView.render();
         },
 
     });
