@@ -97,17 +97,6 @@ function checkTimer(i, total_seconds) {
     }
 }
 
-
-function cancelCountdown() {
-    unitaskrObj.cancel = 1;
-}
-
-
-function stopCountdown() {
-    unitaskrObj.stop = 1;
-}
-
-
 function alarm() {
     var next_task = document.getElementById('next-task');
     var current_task_text = document.getElementById('current-task-text');

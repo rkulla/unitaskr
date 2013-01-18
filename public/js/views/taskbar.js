@@ -8,6 +8,8 @@ var app = app || {};
 
         events: {
            'click #current-task a': 'editTask',
+           'click #stop-countdown': 'stopCountdown',
+           'click #cancel-countdown': 'cancelCountdown',
         },
 
         render: function() {
@@ -39,6 +41,16 @@ var app = app || {};
                 alert('Please enter a task');
                 edit_task(id_name, msg);
             }
+        },
+
+        stopCountdown: function(e) {
+            e.preventDefault();
+            unitaskrObj.stop = 1;
+        },
+
+        cancelCountdown: function(e) {
+            e.preventDefault();
+            unitaskrObj.cancel = 1;
         },
 
     });

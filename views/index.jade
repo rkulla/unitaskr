@@ -75,8 +75,8 @@ block content
         input#sound-check(type="checkbox", title="Play sound with alarm", value="sound", checked)
       #time-bar
         span#update-time &nbsp;
-        a(href='#', onclick='stopCountdown(); return false;') stop early &nbsp;
-        a(href='#', onclick='cancelCountdown(); return false;') cancel
+        a#stop-countdown(href='#') stop early &nbsp;
+        a#cancel-countdown(href='#') cancel
 
     #next-task-name
       span
