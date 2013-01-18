@@ -85,12 +85,12 @@ block content
   #notes
     fieldset#current-notes-input
       legend Current Task Notes &nbsp;
-        a(href='#', onclick='clear_current_notes(); return false;') [clear]
+        a#current-notes(href='#') [clear]
       textarea#current-textarea(rows='6', cols='20')
 
     fieldset#next-notes-input
       legend Next Task Notes &nbsp;
-        a(href='#', onclick='clear_next_notes(); return false;') [clear]
+        a#next-notes(href='#') [clear]
       textarea#next-textarea(rows='6', cols='20')
 
   #todo

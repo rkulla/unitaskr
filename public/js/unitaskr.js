@@ -231,16 +231,6 @@ function task_alert() {
 }
 
 
-function clear_current_notes() {
-    document.getElementById('current-textarea').value='';
-}
-
-
-function clear_next_notes() {
-    document.getElementById('next-textarea').value='';
-}
-
-
 function make_html_id(s) {
     // Change whitespace to dashes and up to 30 chars max.
     return s.replace(/\s/g, '-').substring(0, 30);

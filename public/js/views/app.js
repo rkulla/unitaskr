@@ -17,6 +17,7 @@ var app = app || {};
         render: function() {
             new app.AboutView();
             new app.TaskbarView();
+            new app.NotesView();
         },
 
     });
