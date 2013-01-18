@@ -8,6 +8,7 @@ var app = app || {};
 
         events: {
            'click #current-task a': 'editTask',
+           'click #next-task-name a': 'editTask',
            'click #stop-countdown': 'stopCountdown',
            'click #cancel-countdown': 'cancelCountdown',
         },

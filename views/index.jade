@@ -83,7 +83,7 @@ block content
         strong Next Task: &nbsp;
       span#next-task .larger-text ? &nbsp;
       span
-        a(href='#', onclick='edit_task("next-task", "Next Task"); return false;') [edit]
+        a(href='#', data-target='next-task', msg='Next Task') [edit]
 
   #notes
     fieldset#current-notes-input
