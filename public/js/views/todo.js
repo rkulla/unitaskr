@@ -14,51 +14,57 @@ var app = app || {};
             return this;
         },
 
+        makeHtmlId: function(s) {
+            // Change whitespace to dashes and up to 30 chars max.
+            return s.replace(/\s/g, '-').substring(0, 30);
+        },
+
         addToList: function(e) {
             e.preventDefault();
             var ul = document.getElementById('todo-list');
             var li = document.createElement('li'); 
             var task = document.getElementById('todo-task').value;
-            var next = document.createElement('a');
-            var cb = document.createElement('input');
-            var delete_item = document.createElement('a');
+            var cb = document.createElement('input')
 
-            li.id = make_html_id(task);
+            li.id = this.makeHtmlId(task);
 
-            next.href = '#';
-            next.id = 'next-link';
-            next.title = 'Do this task next';
-            next.appendChild(document.createTextNode(' Next '));
-            next.onclick = function () { 
-                document.getElementById('task').value = task; 
-                document.taskbar.task.focus();
-                return false; // Don't append the '#' to the address bar
-            };
+            var next = $('<a>', {
+                id: 'next-link',
+                href: '#',
+                title: 'Do this task next',
+                text: ' Next ',
+                click: function(e) { 
+                    e.preventDefault();
+                    $('#taskbar #task').val(task);
+                    $('#taskbar #task').focus();
+                },
+            });
 
-            
-            delete_item.href = '#';
-            delete_item.id = 'delete-link';
-            delete_item.title = 'Delete task';
-            delete_item.appendChild(document.createTextNode(' Delete '));
-            delete_item.onclick = function () { 
-                var li_task = document.getElementById(make_html_id(task));
-                ul.removeChild(li_task);
-                return false;
-            };
-            
+            var delete_item = $('<a>', {
+                id: 'delete-link',
+                href: '#',
+                title: 'Delete task',
+                text: ' Delete ',
+                click: function(e) { 
+                    e.preventDefault();
+                    var li_task = document.getElementById(this.makeHtmlId(task));
+                    ul.removeChild(li_task);
+                }.bind(this),
+            });
+
             cb.type = 'checkbox';
             cb.title = "Done";
 
-            li.appendChild(delete_item);
+            $(li).append(delete_item);
             li.appendChild(document.createTextNode(' - '));
-            li.appendChild(next);
+            $(li).append(next);
             li.appendChild(cb);
             li.appendChild(document.createTextNode(' ' + task));
             ul.appendChild(li);
-            
 
             document.getElementById('todo-task').value = '';
-        }
+        },
+
 
     });
 
