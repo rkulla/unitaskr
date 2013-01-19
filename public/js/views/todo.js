@@ -21,12 +21,16 @@ var app = app || {};
 
         addToList: function(e) {
             e.preventDefault();
-            var ul = document.getElementById('todo-list');
-            var li = document.createElement('li'); 
-            var task = document.getElementById('todo-task').value;
-            var cb = document.createElement('input')
+            var ul = $('#todo-list');
+            var task = $('#todo-task').val();
+            var checkbox = $('<input>', {
+                type: 'checkbox',
+                title: 'Done',
+            });
 
-            li.id = this.makeHtmlId(task);
+            var li = $('<li>', {
+                id: this.makeHtmlId(task),
+            }); 
 
             var next = $('<a>', {
                 id: 'next-link',
@@ -47,24 +51,19 @@ var app = app || {};
                 text: ' Delete ',
                 click: function(e) { 
                     e.preventDefault();
-                    var li_task = document.getElementById(this.makeHtmlId(task));
-                    ul.removeChild(li_task);
+                    $('#' + this.makeHtmlId(task)).remove();
                 }.bind(this),
             });
 
-            cb.type = 'checkbox';
-            cb.title = "Done";
+            li.append(delete_item);
+            li.append(' - ');
+            li.append(next);
+            li.append(checkbox);
+            li.append(' ' + task);
+            ul.append(li);
 
-            $(li).append(delete_item);
-            li.appendChild(document.createTextNode(' - '));
-            $(li).append(next);
-            li.appendChild(cb);
-            li.appendChild(document.createTextNode(' ' + task));
-            ul.appendChild(li);
-
-            document.getElementById('todo-task').value = '';
+            $('#todo-task').val('');
         },
-
 
     });
 
