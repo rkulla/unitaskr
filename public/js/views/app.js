@@ -7,13 +7,8 @@ var app = app || {};
 
         el: 'body',
 
-        events: {
-        },
-
         initialize: function() {
-            this.listenTo(app.Todos, 'add', this.addItem);
-app.Todos.add({task: 'item1'});//
-app.Todos.add({task: 'item2'});//
+            this.listenTo(app.Todos, 'add', this.addTodoTask);
             this.render();
         },
 
@@ -21,10 +16,10 @@ app.Todos.add({task: 'item2'});//
             new app.AboutView();
             new app.TaskbarView();
             new app.NotesView();
+            new app.TodoInputView();
         },
 
-        addItem: function(todo) {
-            console.log('called addItem');
+        addTodoTask: function(todo) {
             var view = new app.TodoView({model: todo});
             $('#todo-list').append(view.render().el);
         },

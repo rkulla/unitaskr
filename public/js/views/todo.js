@@ -3,24 +3,40 @@ var app = app || {};
 (function($) {
     'use strict';
 
+    // This view gets todo input from the todo form
+    app.TodoInputView = Backbone.View.extend({
+        el: '#todo',
+
+        events: {
+            'submit form': 'setTodoTask',
+        },
+
+        setTodoTask: function(e) {
+            e.preventDefault();
+
+            // Trigger the 'add' event in AppView
+            // which calls the TodoView
+            app.Todos.add({task: $('#todo-task').val()});
+        },
+
+    });
+
     app.TodoView = Backbone.View.extend({
         tagName: 'li',
 
         events: {
-            'submit form': 'addToList',
-            'click .deleteTodoItem': 'clear',
+            'click .deleteTodoTask': 'deleteTodoTask',
         },
 
         initialize: function() {
-           this.listenTo(this.model, 'change', this.render);//
-           // this.listenTo(this.model, 'destroy', this.remove);//
+           // this.listenTo(this.model, 'change', this.render);
+           // this.listenTo(this.model, 'destroy', this.remove);
         },
 
         render: function() {
             this.$el.append(this.model.get('deleteText') + ' - ');
             this.$el.append(this.model.get('nextText') + ' - ');
             this.$el.append(this.model.get('task'));
-           // this.model.destroy();//
             return this;
         },
 
@@ -30,12 +46,13 @@ var app = app || {};
         },
 
 
-        clear: function() {//
+        deleteTodoTask: function(e) {
+            e.preventDefault();
             this.remove(); // remove this view
         },
 
-        addToList: function(e) {
-            e.preventDefault();
+        //addToList: function(e) {
+         //   e.preventDefault();
         //     var ul = $('#todo-list');
         //     var task = $('#todo-task').val();
         //     var checkbox = $('<input>', {
@@ -79,7 +96,7 @@ var app = app || {};
         //     ul.append(li);
 
         //     $('#todo-task').val('');
-        },
+        //},
 
     });
 
