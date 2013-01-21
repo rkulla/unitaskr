@@ -18,6 +18,7 @@ var app = app || {};
             new app.AboutView();
             new app.TaskbarView();
             new app.NotesView();
+            // new app.TodoView({model: new app.TodoList()});
             new app.TodoView();
         },
 
