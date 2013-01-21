@@ -3,19 +3,17 @@ var app = app || {};
 (function($) {
     'use strict';
 
-    app.TodoList = Backbone.Model.extend({
+    app.Todo = Backbone.Model.extend({
 
         defaults: {
-            fname: 'ryan',
+            deleteText: '<a href="#" id="delete-link" class="deleteTodoItem"> Delete </a>' ,
+            nextText: ' Next ',
         },
 
         initialize: function() {
             console.log('called model.initiaze');
         },
 
-        mf: function() {
-            console.log('called model.mf');
-        },
     });
 
 }(jQuery));

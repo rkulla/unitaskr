@@ -11,6 +11,9 @@ var app = app || {};
         },
 
         initialize: function() {
+            this.listenTo(app.Todos, 'add', this.addItem);
+app.Todos.add({task: 'item1'});//
+app.Todos.add({task: 'item2'});//
             this.render();
         },
 
@@ -18,8 +21,12 @@ var app = app || {};
             new app.AboutView();
             new app.TaskbarView();
             new app.NotesView();
-            // new app.TodoView({model: new app.TodoList()});
-            new app.TodoView();
+        },
+
+        addItem: function(todo) {
+            console.log('called addItem');
+            var view = new app.TodoView({model: todo});
+            $('#todo-list').append(view.render().el);
         },
 
     });

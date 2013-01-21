@@ -8,27 +8,30 @@ var app = app || {};
 
         events: {
             'submit form': 'addToList',
+            'click .deleteTodoItem': 'clear',
         },
-
-        model: new app.TodoList(),
 
         initialize: function() {
            this.listenTo(this.model, 'change', this.render);//
-           //this.listenTo(this.model, 'destroy', this.remove);//
-           this.model.set({fname:'henry'});
-           this.model.mf();
-           this.model.set({fname:'jack'});
-           // this.model.destroy();//
+           // this.listenTo(this.model, 'destroy', this.remove);//
         },
 
         render: function() {
-            this.$el.html(this.model.get('fname') + '<br>');//
+            this.$el.append(this.model.get('deleteText') + ' - ');
+            this.$el.append(this.model.get('nextText') + ' - ');
+            this.$el.append(this.model.get('task'));
+           // this.model.destroy();//
             return this;
         },
 
         makeHtmlId: function(s) {
             // Change whitespace to dashes and up to 30 chars max.
             return s.replace(/\s/g, '-').substring(0, 30);
+        },
+
+
+        clear: function() {//
+            this.remove(); // remove this view
         },
 
         addToList: function(e) {
