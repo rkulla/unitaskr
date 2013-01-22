@@ -19,28 +19,17 @@ block content
     button#about-button About &rsaquo;
 
     #about
-      p Unitasking (monotasking), means focusing on one job, project, or goal at 
-        | a time, completing that task, and moving on to the next one. Thus, it's
-        | the opposite of multi-tasking.
-      p <strong><em>Unitaskr</em></strong> is a simple productivity tool that 
-        | allows you to set tasks you want to perform, just for today, and a time 
-        | when you want to start performing them, then it alerts you when it's 
-        | time to move to the next task.
-      p It's very easy to get caught up in one task so much that you lose track 
+      p <strong><em>Unitaskr</em></strong> is a productivity tool that allows 
+        | you to set tasks you want to perform, and add a timer.
+      p Unitasking (a.k.a Monotasking), means creating blocks of time to perform
+        | one task at a time. Thus, it's the opposite of multi-tasking.
+      p It's easy to get caught up doing one task so much that you lose track 
         | of time and never end up getting to all the tasks on your todo list. 
         | Unitaskr aims to solve this problem.
-      p The interface is designed to allow you to quickly enter new tasks, and 
-        | optional notes about them.
-      p Manually starting the timer between each task allows you to take as long
-        | of a break between tasks as you want.
-      p You'll need to enable popups for unitaskr to be able to alert you. 
-        | Unitaskr doesn't use cookies, so if you refresh the page you will
-        | restart the program.
-      p Tip: Time management studies show that it's best to take care of as many
-        | small, quick-to-do, tasks as possible right away--such as writing quick 
-        | emails and starting the dishwasher--that way, you can completely forget 
-        | about these things, rather think constantly thinking about them the rest 
-        | of the day, thus decreasing stress and improving concentration.
+      p I'm a fan of the Pomodoro technique, so I made it the timer default to
+        | 25 minutes.
+      p Note that Unitaskr currently doesn't save anything, so if you refresh
+        | the page you will restart the program.
 
       button#hide-about &lsaquo; Hide About
       hr
@@ -65,7 +54,7 @@ block content
           label(for='hours') Hours
           input#hours(type='text', size='1', value='00')
           label(for='minutes') Minutes
-          input#minutes(type='text', size='1', value='00')
+          input#minutes(type='text', size='1', value='25')
           label(for='hours') Seconds
           input#seconds(type='text', size='1', value='00')
         #task-input

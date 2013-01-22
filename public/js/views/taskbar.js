@@ -27,83 +27,88 @@ var app = app || {};
 
         startTimer: function(e) {
             e.preventDefault();
+            var seconds_in_hours = $('#hours').val() * 3600;
+            var seconds_in_minutes = $('#minutes').val() * 60;
+            var seconds = $('#seconds').val();
+            var total_seconds = (+(seconds_in_hours) + +(seconds_in_minutes) + +(seconds));
+            var $task = $('#task');
+            var last_task_val = $task.val();
+            var $next_task = $('#next-task');
+            var $next_task_name = $('#next-task-name');
 
-            // Calculate total seconds:
-            var seconds_in_hours = document.getElementById('hours').value * 3600;
-            var seconds_in_minutes = document.getElementById('minutes').value * 60;
-            var seconds = document.getElementById('seconds').value;
-            var total_seconds = (+seconds_in_hours + +seconds_in_minutes + +seconds);
             if (!total_seconds && !app.hasInitialTask) {
                 total_seconds = 1;
             }
 
-            var task = document.getElementById('task');
-            var next_task_val = task.value;
-            var next_task = document.getElementById('next-task');
-
-            if (task.value == '') {
+            if ($task.val() == '') {
                 alert('Please enter a task.');
-                document.taskbar.task.focus();
+                $task.focus();
                 return false;
             }
 
             // Validate user input
             if (total_seconds == 0 && app.hasInitialTask) {
                 alert('Please enter a time.');
-                document.taskbar.hours.select();
+                $('#minutes').select();
                 return false;
             }
 
             // Clear last inputted task value
-            task.value = '';
+            $task.val('');
 
             app.timeOnTask = this.secondsToTime(total_seconds);
 
             // Set the text for what the next task will be. '\u2014' is 
             // unicode for &mdash;
-            next_task.innerHTML = next_task_val + ' \u2014 Counting down from: ' + 
-                this.secondsToTime(total_seconds);
+            $next_task.html(last_task_val + ' \u2014 Counting down from: ' + 
+                this.secondsToTime(total_seconds));
 
             if (app.hasInitialTask) {
                 setTimeout(timerLoop, 1000);
             } else { 
                 this.alarm();
-                document.getElementById('current-task').style.display = 'block';
-                document.getElementById('current-notes-input').style.display = 'block';
-                document.getElementById('next-notes-input').style.display = 'block';
+                $('#current-task').css('display', 'block');
+                $('#current-notes-input').css('display', 'block');
+                $('#next-notes-input').css('display', 'block');
             }
 
             var i = 0;
             var that = this;
             function timerLoop() {
+                var $update_time = $('#update-time');
+                var $task_bar = $('#task-bar');
+                var $time_bar = $('#time-bar');
+
                 if (i < total_seconds) {
                     ++i;
-                    document.getElementById('task-bar').style.display = 'none';
-                    document.getElementById('usage-timer').style.display = 'none';
-                    document.getElementById('next-task-name').style.display = 'block';
-                    document.getElementById('time-bar').style.display = 'block';
-                    var update_time = document.getElementById('update-time');
-                    update_time.innerHTML = that.secondsToTime(total_seconds - i);
+                    $task_bar.css('display', 'none');
+                    $('#usage-timer').css('display', 'none');
+                    $next_task_name.css('display', 'block');
+                    $time_bar.css('display', 'block');
+                    $update_time.html(that.secondsToTime(total_seconds - i));
                     setTimeout(timerLoop, 1000);
+
                     // Cancel the timer/next task:
                     if (app.cancel) {
-                        document.getElementById('time-bar').style.display = 'none';
+                        $time_bar.css('display', 'none');
                         total_seconds = 0;
                         app.cancel = false;
                     }
+
                     // Stop the timer early:
                     if (app.stop) {
-                        document.getElementById('time-bar').style.display = 'none';
+                        $time_bar.css('display', 'none');
                         // Recalulate how much time was spent on the task:
                         app.timeOnTask = that.secondsToTime(i);
                         i = total_seconds;
                     }
+
                     that.checkTimer(i, total_seconds);
                 } else {
-                    document.getElementById('task-bar').style.display = 'block';
-                    document.getElementById('usage-timer').style.display = 'none';
-                    document.getElementById('next-task-name').style.display = 'none';
-                    document.taskbar.task.focus();
+                    $task_bar.css('display', 'block');
+                    $('#usage-timer').css('display', 'none');
+                    $next_task_name.css('display', 'none');
+                    $task.focus();
                 }
             }
         },
