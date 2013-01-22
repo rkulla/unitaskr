@@ -26,77 +26,33 @@ var app = app || {};
 
         events: {
             'click .deleteTodoTask': 'deleteTodoTask',
+            'click .nextTodoTask': 'setNextTodoTask',
         },
 
         initialize: function() {
+           this.$task = $('#todo-task').val();
            // this.listenTo(this.model, 'change', this.render);
            // this.listenTo(this.model, 'destroy', this.remove);
         },
 
         render: function() {
-            this.$el.append(this.model.get('deleteText') + ' - ');
-            this.$el.append(this.model.get('nextText') + ' - ');
+            $('#todo-task').val('');
+            var $todoTaskTemplate = _.template($('#todoTaskTemplate').html());
+            this.$el.append($todoTaskTemplate);//
             this.$el.append(this.model.get('task'));
             return this;
         },
 
-        makeHtmlId: function(s) {
-            // Change whitespace to dashes and up to 30 chars max.
-            return s.replace(/\s/g, '-').substring(0, 30);
-        },
-
-
         deleteTodoTask: function(e) {
             e.preventDefault();
-            this.remove(); // remove this view
+            this.remove(); // remove this `<li>` view
         },
 
-        //addToList: function(e) {
-         //   e.preventDefault();
-        //     var ul = $('#todo-list');
-        //     var task = $('#todo-task').val();
-        //     var checkbox = $('<input>', {
-        //         type: 'checkbox',
-        //         title: 'Done',
-        //     });
-
-        //     var li = $('<li>', {
-        //         id: this.makeHtmlId(task),
-        //     }); 
-
-        //     var next = $('<a>', {
-        //         id: 'next-link',
-        //         href: '#',
-        //         title: 'Do this task next',
-        //         text: ' Next ',
-        //         click: function(e) { 
-        // console.log(e.target);
-        //             e.preventDefault();
-        //             $('#taskbar #task').val(task);
-        //             $('#taskbar #task').focus();
-        //         },
-        //     });
-
-        //     var delete_item = $('<a>', {
-        //         id: 'delete-link',
-        //         href: '#',
-        //         title: 'Delete task',
-        //         text: ' Delete ',
-        //         click: function(e) { 
-        //             e.preventDefault();
-        //             $('#' + this.makeHtmlId(task)).remove();
-        //         }.bind(this),
-        //     });
-
-        //     li.append(delete_item);
-        //     li.append(' - ');
-        //     li.append(next);
-        //     li.append(checkbox);
-        //     li.append(' ' + task);
-        //     ul.append(li);
-
-        //     $('#todo-task').val('');
-        //},
+        setNextTodoTask: function(e) {
+            e.preventDefault();
+            $('#taskbar #task').val(this.$task);
+            $('#taskbar #task').focus();
+        },
 
     });
 

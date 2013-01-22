@@ -4,6 +4,13 @@ block content
   h1= title
   h2 One task at a time.
 
+  script#todoTaskTemplate(type='text/template')
+    a#delete-link(href='#', class='deleteTodoTask', title='Delete from this todo list') Delete
+    &nbsp; &dash; &nbsp;
+    a#next-link(href='#', class='nextTodoTask', title='Set as the next task') Next
+    &nbsp;
+    input(type='checkbox', title='Done')
+
   script
     $(document).on("submit", "form#taskbar", function(e) { 
       e.preventDefault(); 
