@@ -19,6 +19,9 @@ var app = app || {};
             app.stop = false;
             app.cancel = false;
             app.timeOnTask = 0;
+
+            this.$next_task = $('#next-task');
+            this.$next_task_val = null;
         },
 
         render: function() {
@@ -32,9 +35,8 @@ var app = app || {};
             var seconds = $('#seconds').val();
             var total_seconds = (+(seconds_in_hours) + +(seconds_in_minutes) + +(seconds));
             var $task = $('#task');
-            var last_task_val = $task.val();
-            var $next_task = $('#next-task');
             var $next_task_name = $('#next-task-name');
+            this.$next_task_val = $task.val();
 
             if (!total_seconds && !app.hasInitialTask) {
                 total_seconds = 1;
@@ -60,7 +62,7 @@ var app = app || {};
 
             // Set the text for what the next task will be. '\u2014' is 
             // unicode for &mdash;
-            $next_task.html(last_task_val + ' \u2014 Counting down from: ' + 
+            this.$next_task.html(this.$next_task_val + ' \u2014 Counting down from: ' + 
                 this.secondsToTime(total_seconds));
 
             if (app.hasInitialTask) {
@@ -120,54 +122,39 @@ var app = app || {};
         },
 
         alarm: function() {
-            var next_task = document.getElementById('next-task');
-            var current_task_text = document.getElementById('current-task-text');
-            var completed_tasks = document.getElementById('completed-tasks');
-            var question_mark = document.getElementById('question-mark');
-            var next_task_val = next_task.innerHTML.substring(0, 
-                next_task.innerHTML.indexOf('\u2014'));
+            var $current_task_text = $('#current-task-text').html();
+            var $completed_tasks = $('#completed-tasks');
+            this.$next_task_val = this.$next_task_val;
 
             // Alert the user they can start the next task now
             if (app.hasInitialTask && !app.stop) {
-                alert('Time to ' + next_task_val);
+                alert('Time to ' + this.$next_task_val);
                 if ($('#sound-check').is(':checked')) {
                     document.getElementById('chime').play();
                 }
             }
 
             app.stop = false; // reset
-
-            // Set hasInitialTask to true
             app.hasInitialTask = true;
 
-            // Delete '?' for 'completed_tasks' when it receives an actual value.
-            if (current_task_text.innerHTML != '?' && next_task.innerHTML != '?' &&
-                    question_mark.innerHTML == '?') {
-                question_mark.innerHTML = '';
-            }
-
             // Apppend the current task to the Completed Tasks box:
-            if (current_task_text.innerHTML != '?') {
-                var s = current_task_text.innerHTML + ' \u2014 Time on task: ' + 
-                        app.timeOnTask;
-                var ul = document.getElementById('completed-tasks');
-                var li = document.createElement('li'); 
-                li.appendChild(document.createTextNode(s + ' Ended: ' + this.getTimeNow()));
-                ul.appendChild(li);
+            if ($current_task_text != '') {
+                var $li = $('<li>');
+                $li.append($current_task_text + ' \u2014 Time on task: ' +
+                        app.timeOnTask + ' Ended: ' + this.getTimeNow());
+                $completed_tasks.append($li);
             }
 
-            // Make the current task the value of Next Task
-            current_task_text.innerHTML = next_task.innerHTML.substring(0, 
-                next_task.innerHTML.indexOf('\u2014'));
+            $('#current-task-text').html(this.$next_task_val);
 
             this.updateNotes();
 
             // Change the task input bar to accept next task(s)
             if (app.hasInitialTask) {
-                document.getElementById('task-desc').innerHTML = 'Next Task ';
-                document.getElementById('usage-no-timer').style.display = 'none';
-                document.getElementById('usage-timer').style.display = 'block';
-                document.getElementById('timer-input').style.display = 'block';
+                $('#task-desc').html('Next Task ');
+                $('#usage-no-timer').css('display', 'none');
+                $('#usage-timer').css('display', 'block');
+                $('#timer-input').css('display', 'block');
             }
 
             this.cleanUp();
