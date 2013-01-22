@@ -11,11 +11,9 @@ block content
     &nbsp;
     input(type='checkbox', title='Done')
 
-  script
-    $(document).on("submit", "form#taskbar", function(e) { 
-      e.preventDefault(); 
-      startTimer(); 
-    });
+  audio#chime(preload='auto')
+    source(src='audio/chime.wav', type='audio/wav')
+      Your browser doesn't support WAV files in the audio element.
 
   #about-container
     button#about-button About &rsaquo;
