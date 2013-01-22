@@ -127,9 +127,12 @@ var app = app || {};
             var next_task_val = next_task.innerHTML.substring(0, 
                 next_task.innerHTML.indexOf('\u2014'));
 
-            // Alert the user that the task is ready to begin
+            // Alert the user they can start the next task now
             if (app.hasInitialTask && !app.stop) {
-                document.getElementById('chime').play();
+                alert('Time to ' + next_task_val);
+                if ($('#sound-check').is(':checked')) {
+                    document.getElementById('chime').play();
+                }
             }
 
             app.stop = false; // reset
