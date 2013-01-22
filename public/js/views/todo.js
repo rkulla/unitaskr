@@ -5,6 +5,7 @@ var app = app || {};
 
     // This view gets todo input from the todo form
     app.TodoInputView = Backbone.View.extend({
+
         el: '#todo',
 
         events: {
@@ -31,14 +32,12 @@ var app = app || {};
 
         initialize: function() {
            this.$task = $('#todo-task').val();
-           // this.listenTo(this.model, 'change', this.render);
-           // this.listenTo(this.model, 'destroy', this.remove);
         },
 
         render: function() {
             $('#todo-task').val('');
             var $todoTaskTemplate = _.template($('#todoTaskTemplate').html());
-            this.$el.append($todoTaskTemplate);//
+            this.$el.append($todoTaskTemplate);
             this.$el.append(this.model.get('task'));
             return this;
         },

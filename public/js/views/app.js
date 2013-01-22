@@ -5,10 +5,11 @@ var app = app || {};
 
     app.AppView = Backbone.View.extend({
 
-        el: 'body',
-
         initialize: function() {
+            // listen for events to our app.Todos Collection
             this.listenTo(app.Todos, 'add', this.addTodoTask);
+
+            // Self render this view
             this.render();
         },
 
@@ -25,4 +26,5 @@ var app = app || {};
         },
 
     });
+
 })(jQuery);
