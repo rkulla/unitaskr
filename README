@@ -1,6 +1,6 @@
 
 
-Unitaskr is a productivity tool (written in JavaScript using Backbone.js and Node.js) that allows you to set tasks you want to perform, and add a timer. It comes with a built-in Todo-list, as well as features for note taking and task tracking.
+Unitaskr is a productivity tool (written in JavaScript using Backbone.js and Node.js) that allows you to set tasks you want to perform, and add a timer. It comes with a built-in Todo-list, as well as features for note taking and task history.
 
 Unitasking (a.k.a Monotasking), means creating blocks of time to perform  one task at a time. Thus, it's the opposite of multi-tasking.
 

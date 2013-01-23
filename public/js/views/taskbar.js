@@ -20,6 +20,7 @@ var app = app || {};
             app.cancel = false;
             app.timeOnTask = 0;
 
+            this.$task = $('#task');
             this.$next_task = $('#next-task');
             this.$next_task_val = null;
         },
@@ -34,17 +35,16 @@ var app = app || {};
             var seconds_in_minutes = $('#minutes').val() * 60;
             var seconds = $('#seconds').val();
             var total_seconds = (+(seconds_in_hours) + +(seconds_in_minutes) + +(seconds));
-            var $task = $('#task');
             var $next_task_name = $('#next-task-name');
-            this.$next_task_val = $task.val();
+            this.$next_task_val = this.$task.val();
 
             if (!total_seconds && !app.hasInitialTask) {
                 total_seconds = 1;
             }
 
-            if ($task.val() == '') {
+            if (this.$task.val() == '') {
                 alert('Please enter a task.');
-                $task.focus();
+                this.$task.focus();
                 return false;
             }
 
@@ -56,7 +56,7 @@ var app = app || {};
             }
 
             // Clear last inputted task value
-            $task.val('');
+            this.$task.val('');
 
             app.timeOnTask = this.secondsToTime(total_seconds);
 
@@ -110,7 +110,7 @@ var app = app || {};
                     $task_bar.css('display', 'block');
                     $('#usage-timer').css('display', 'none');
                     $next_task_name.css('display', 'none');
-                    $task.focus();
+                    document.taskbar.task.focus();
                 }
             }
         },
@@ -160,19 +160,16 @@ var app = app || {};
             this.cleanUp();
         },
 
-
         // Moves the next task's notes to the current task's notes
         updateNotes: function() {
-            document.getElementById('current-textarea').value = 
-                document.getElementById('next-textarea').value;
-
-            document.getElementById('next-textarea').value = '';
+            $('#current-textarea').val($('#next-textarea').val());
+            $('#next-textarea').val('');
         },
 
         cleanUp: function() {
-            document.getElementById('next-task').innerHTML = '?';
+            $('#next-task').html('');
             // Make the countdown clock disappear:
-            document.getElementById('time-bar').style.display = 'none';
+            $('time-bar').css('display', 'none');
             document.taskbar.task.focus();
         },
 
@@ -219,7 +216,7 @@ var app = app || {};
             e.preventDefault();
             var id_name = $(e.target).data('target');
             var msg = $(e.target).data('msg');
-            var current = document.getElementById(id_name).innerHTML;
+            var current = $('#' + id_name).html();
             
             if (current.indexOf('\u2014') != -1) { // Edit next task
                 var new_task = prompt(msg, current.substring(0, current.indexOf('\u2014')));
@@ -235,7 +232,7 @@ var app = app || {};
             }
                 
             if (new_task != '') {
-                document.getElementById(id_name).innerHTML = new_task;
+                $('#' + id_name).html(new_task);
             } else {
                 alert('Please enter a task');
                 edit_task(id_name, msg);
