@@ -123,7 +123,6 @@ var app = app || {};
 
         alarm: function() {
             var $current_task_text = $('#current-task-text').html();
-            var $completed_tasks = $('#completed-tasks');
             this.$next_task_val = this.$next_task_val;
 
             // Alert the user they can start the next task now
@@ -139,10 +138,11 @@ var app = app || {};
 
             // Apppend the current task to the Completed Tasks box:
             if ($current_task_text != '') {
-                var $li = $('<li>');
-                $li.append($current_task_text + ' \u2014 Time on task: ' +
-                        app.timeOnTask + ' Ended: ' + this.getTimeNow());
-                $completed_tasks.append($li);
+                app.CompletedTask.set({
+                    task: $current_task_text,
+                    timeSpent: app.timeOnTask,
+                    timeEnded: this.getTimeNow(),
+                });
             }
 
             $('#current-task-text').html(this.$next_task_val);
@@ -169,7 +169,7 @@ var app = app || {};
         cleanUp: function() {
             $('#next-task').html('');
             // Make the countdown clock disappear:
-            $('time-bar').css('display', 'none');
+            $('#time-bar').css('display', 'none');
             document.taskbar.task.focus();
         },
 

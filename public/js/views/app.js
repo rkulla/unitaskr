@@ -6,7 +6,7 @@ var app = app || {};
     app.AppView = Backbone.View.extend({
 
         initialize: function() {
-            // listen for events to our app.Todos Collection
+            // Listen for events to our app.Todos Collection
             this.listenTo(app.Todos, 'add', this.addTodoTask);
 
             // Self render this view
@@ -18,6 +18,7 @@ var app = app || {};
             new app.TaskbarView();
             new app.NotesView();
             new app.TodoInputView();
+            new app.CompletedTasksView();
         },
 
         addTodoTask: function(todo) {

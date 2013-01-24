@@ -11,6 +11,9 @@ block content
     &nbsp;
     input(type='checkbox', title='Done')
 
+  script#completedTaskTemplate(type='text/template')
+    li <%=task%> &mdash; Time spent: <%=timeSpent%> Ended: <%=timeEnded%>.
+
   audio#chime(preload='auto')
     source(src='audio/chime.wav', type='audio/wav')
       Your browser doesn't support WAV files in the audio element.
