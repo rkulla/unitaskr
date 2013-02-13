@@ -19,6 +19,8 @@ Change directories to the top of unitaskr/ and run:
 
 Running
 ========
+Make sure to disable pop-up blocking, or add http://localhost:3000/ to your pop-up blocker's exceptions list.
+
 Change directories to the top of unitaskr/ and run:
 
     $ node app
