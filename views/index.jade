@@ -14,14 +14,15 @@ block content
   script#completedTaskTemplate(type='text/template')
     li <%=task%> &mdash; Time spent: <%=timeSpent%> Ended: <%=timeEnded%>.
 
-  audio#chime(preload='auto')
-    source(src='audio/chime.wav', type='audio/wav')
-      Your browser doesn't support WAV files in the audio element.
+  section
+    audio#chime(preload='auto')
+      source(src='audio/chime.wav', type='audio/wav')
+        Your browser doesn't support WAV files in the audio element.
 
   aside#about-container
     button#about-button About &rsaquo;
 
-    #about
+    section#about
       p <strong><em>Unitaskr</em></strong> is a productivity tool that allows 
         | you to set tasks you want to perform, and add a timer.
       p Unitasking (a.k.a Monotasking), means creating blocks of time to perform
@@ -38,7 +39,7 @@ block content
       hr
 
   section#taskbar-container
-    #current-task
+    section#current-task
       span
         strong Currently Set Task: &nbsp;
       span#current-task-text
@@ -46,33 +47,38 @@ block content
       span
         a(href='#', data-target='current-task-text', data-msg='Current Task') [edit]
 
-    p#usage-no-timer Enter the first task.
-    p#usage-timer
-      | Enter the amount of time to spend doing the <em>current</em> task before being alerted
-      | when it's time to do the next task.
+    section
+      p#usage-no-timer Enter the first task.
 
-    form#taskbar(name='taskbar', action='')
-      #task-bar
-        #timer-input
-          label(for='hours') Hours
-          input#hours(type='text', size='1', value='00')
-          label(for='minutes') Minutes
-          input#minutes(type='text', size='1', value='25')
-          label(for='hours') Seconds
-          input#seconds(type='text', size='1', value='00')
-        #task-input
-          strong#task-desc Current Task &nbsp;
-          input#task(type='text', placeholder='Task', autofocus)
-          input(type='submit', value='Set')
-      div
-        label(for='sound') Sound
-        input#sound-check(type="checkbox", title="Play sound with alarm", value="sound", checked)
-      #time-bar
-        span#update-time &nbsp;
-        a#stop-countdown(href='#') stop early &nbsp;
-        a#cancel-countdown(href='#') cancel
+    section
+      p#usage-timer
+        | Enter the amount of time to spend doing the <em>current</em> task before being alerted
+        | when it's time to do the next task.
 
-    #next-task-name
+    section
+      form#taskbar(name='taskbar', action='')
+        section#task-bar
+          #timer-input
+            label(for='hours') Hours
+            input#hours(type='text', size='1', value='00')
+            label(for='minutes') Minutes
+            input#minutes(type='text', size='1', value='25')
+            label(for='hours') Seconds
+            input#seconds(type='text', size='1', value='00')
+          #task-input
+            strong#task-desc Current Task &nbsp;
+            input#task(type='text', placeholder='Task', autofocus)
+            input(type='submit', value='Set')
+        section
+          label(for='sound') Sound
+          input#sound-check(type="checkbox", title="Play sound with alarm", value="sound", checked)
+
+    section#time-bar
+      span#update-time &nbsp;
+      a#stop-countdown(href='#') stop early &nbsp;
+      a#cancel-countdown(href='#') cancel
+
+    section#next-task-name
       span
         strong Next Task: &nbsp;
       span#next-task .larger-text ? &nbsp;
