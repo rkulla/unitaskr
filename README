@@ -1,6 +1,6 @@
 
 
-Unitaskr is a productivity tool (written in JavaScript using Backbone.js and Node.js) that allows you to set tasks you want to perform, and add a timer. It comes with a built-in Todo-list, as well as features for note taking and task history.
+Unitaskr is a productivity tool (written in HTML5/Backbone.js/Node.js) that allows you to set tasks you want to perform, and add a timer. It comes with a built-in Todo-list, as well as features for note taking and task history.
 
 Unitasking (a.k.a Monotasking), means creating blocks of time to perform  one task at a time. Thus, it's the opposite of multi-tasking.
 
@@ -19,6 +19,8 @@ Change directories to the top of unitaskr/ and run:
 
 Running
 ========
+Make sure to disable pop-up blocking, or add http://localhost:3000/ to your pop-up blocker's exceptions list.
+
 Change directories to the top of unitaskr/ and run:
 
     $ node app
