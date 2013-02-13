@@ -18,7 +18,7 @@ block content
     source(src='audio/chime.wav', type='audio/wav')
       Your browser doesn't support WAV files in the audio element.
 
-  #about-container
+  aside#about-container
     button#about-button About &rsaquo;
 
     #about
@@ -37,7 +37,7 @@ block content
       button#hide-about &lsaquo; Hide About
       hr
 
-  div#taskbar-container
+  section#taskbar-container
     #current-task
       span
         strong Currently Set Task: &nbsp;
@@ -79,7 +79,7 @@ block content
       span
         a(href='#', data-target='next-task', msg='Next Task') [edit]
 
-  #notes
+  section#notes
     fieldset#current-notes-input
       legend Current Task Notes &nbsp;
         a#current-notes(href='#') [clear]
@@ -90,7 +90,7 @@ block content
         a#next-notes(href='#') [clear]
       textarea#next-textarea(rows='6', cols='20')
 
-  #todo
+  section#todo
     #todo-list-heading To-Do List
     form(name='todoform', action='')
       span#todo-task-input-desc
@@ -101,6 +101,6 @@ block content
       #todo-list-box
         ul#todo-list
 
-  #completed-tasks-log
+  section#completed-tasks-log
     h3 Completed Tasks / Time Log
     ul#completed-tasks
