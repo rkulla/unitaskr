@@ -127,10 +127,10 @@ var app = app || {};
 
             // Alert the user they can start the next task now
             if (app.hasInitialTask && !app.stop) {
-                alert('Time to ' + this.$next_task_val);
                 if ($('#sound-check').is(':checked')) {
                     document.getElementById('chime').play();
                 }
+                alert('Time to ' + this.$next_task_val);
             }
 
             app.stop = false; // reset
