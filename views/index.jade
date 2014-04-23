@@ -5,11 +5,12 @@ block content
   h2 One task at a time.
 
   script#todoTaskTemplate(type='text/template')
-    a#delete-link(href='#', class='deleteTodoTask', title='Delete from this todo list') Delete
-    &nbsp; &dash; &nbsp;
-    a#next-link(href='#', class='nextTodoTask', title='Set as the next task') Next
-    &nbsp;
+    a#delete-link(href='#', class='deleteTodoTask', title='Delete from this todo list') [X]
+    | &nbsp;
+    a#next-link(href='#', class='nextTodoTask', title='Set as the next task') [Do Next]
+    | &nbsp;
     input(type='checkbox', title='Done')
+    | &nbsp;
 
   script#completedTaskTemplate(type='text/template')
     li <%=task%> &mdash; Time spent: <%=timeSpent%> Ended: <%=timeEnded%>.
@@ -17,7 +18,6 @@ block content
   section
     audio#chime(preload='auto')
       source(src='audio/chime.wav', type='audio/wav')
-        Your browser doesn't support WAV files in the audio element.
 
   aside#about-container
     button#about-button About &rsaquo;
@@ -43,8 +43,7 @@ block content
       span
         strong Currently Set Task: &nbsp;
       span#current-task-text
-      &nbsp;
-      span
+      span &nbsp;
         a(href='#', data-target='current-task-text', data-msg='Current Task') [edit]
 
     section
