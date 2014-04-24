@@ -84,7 +84,6 @@ var app = app || {};
                 if (i < total_seconds) {
                     ++i;
                     $task_bar.css('display', 'none');
-                    $('#usage-timer').css('display', 'none');
                     $following_task_name.css('display', 'block');
                     $time_bar.css('display', 'block');
                     $update_time.html(that.secondsToTime(total_seconds - i));
@@ -108,7 +107,6 @@ var app = app || {};
                     that.checkTimer(i, total_seconds);
                 } else {
                     $task_bar.css('display', 'block');
-                    $('#usage-timer').css('display', 'none');
                     $following_task_name.css('display', 'none');
                     document.taskbar.task.focus();
                 }
@@ -152,8 +150,7 @@ var app = app || {};
             // Change the task input bar to accept following task(s)
             if (app.hasInitialTask) {
                 $('#task-desc').html('Following Task ');
-                $('#usage-no-timer').css('display', 'none');
-                $('#usage-timer').css('display', 'block');
+                $('#task-input input[type=submit]').val('Start');
                 $('#timer-input').css('display', 'block');
             }
 
