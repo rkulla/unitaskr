@@ -173,17 +173,18 @@ var app = app || {};
             document.taskbar.task.focus();
         },
 
-        secondsToTime: function(total_seconds) {
-            var hours = Math.floor(total_seconds / 3600);
-            var minutes = Math.floor((total_seconds % 3600) / 60);
-            var seconds = Math.round((((total_seconds % 3600) / 60) - minutes) * 60);
+        zeroPad: function(n, s) {
+            // Return 5 as "05", etc. and append a small string
+            // e.g., 'h' for '05h'.
+            return ('00' + n.toString()).slice(-2) + '<small>'+s+'</small> ';
+        },
 
-            // Format the text and include proper pluralization
-            var hours_text = (hours == 1 ? ' hour, ' : ' hours, ');
-            var minutes_text = (minutes == 1 ? ' minute and ' : ' minutes and ');
-            var seconds_text = (seconds == 1 ? ' second' : ' seconds');
-
-            return hours + hours_text + minutes + minutes_text + seconds + seconds_text;
+        secondsToTime: function(total_secs) {
+            var hours = Math.floor(total_secs / 3600);
+            var mins = Math.floor((total_secs % 3600) / 60);
+            var secs = Math.round((((total_secs % 3600) / 60) - mins) * 60);
+            return this.zeroPad(hours, 'h') + this.zeroPad(mins, 'm') + 
+                this.zeroPad(secs, 's');
         },
 
         getTimeNow: function() {
