@@ -90,7 +90,7 @@ legend {
 }
 
 
-#next-task-name {
+#following-task-name {
     margin-bottom: 15px;
     padding: 1px;
     display: none;
@@ -155,7 +155,7 @@ legend {
 }
 
 
-#next-notes-input {
+#following-notes-input {
     display: none;
     margin-top: 17px;
     text-align: center;
@@ -169,7 +169,7 @@ legend {
 }
 
 
-#next-textarea {
+#following-textarea {
     border: none;
     background-color: #FDFF80;
     padding: 10px;

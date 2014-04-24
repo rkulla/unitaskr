@@ -41,7 +41,7 @@ block content
   section#taskbar-container
     section#current-task
       span
-        strong Currently Set Task: &nbsp;
+        strong Current Task: &nbsp;
       span#current-task-text
       span &nbsp;
         a(href='#', data-target='current-task-text', data-msg='Current Task') Edit
@@ -52,7 +52,7 @@ block content
     section
       p#usage-timer
         | Enter the amount of time to spend doing the <em>current</em> task before being alerted
-        | when it's time to do the next task.
+        | when it's time to do the following task.
 
     section
       form#taskbar(name='taskbar', action='')
@@ -79,13 +79,13 @@ block content
       | &nbsp;&nbsp;
       a#cancel-countdown(href='#') Cancel
 
-    section#next-task-name
+    section#following-task-name
       span
-        strong Next Task: &nbsp;
-      span#next-task .larger-text ?
+        strong Following Task: &nbsp;
+      span#following-task .larger-text ?
       | &nbsp;&nbsp;
       span
-        a(href='#', data-target='next-task', msg='Next Task') Edit
+        a(href='#', data-target='following-task', msg='Following Task') Edit
 
   section#notes
     fieldset#current-notes-input
@@ -93,10 +93,10 @@ block content
         a#current-notes(href='#') Clear
       textarea#current-textarea(rows='6', cols='20')
 
-    fieldset#next-notes-input
-      legend Next Task Notes &nbsp;
-        a#next-notes(href='#') Clear
-      textarea#next-textarea(rows='6', cols='20')
+    fieldset#following-notes-input
+      legend Following Task Notes &nbsp;
+        a#following-notes(href='#') Clear
+      textarea#following-textarea(rows='6', cols='20')
 
   section#todo
     #todo-list-heading To-Do List

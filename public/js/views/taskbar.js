@@ -8,7 +8,7 @@ var app = app || {};
 
         events: {
            'click #current-task a': 'editTask',
-           'click #next-task-name a': 'editTask',
+           'click #following-task-name a': 'editTask',
            'click #stop-countdown': 'stopCountdown',
            'click #cancel-countdown': 'cancelCountdown',
            'submit form#taskbar': 'startTimer',
@@ -21,8 +21,8 @@ var app = app || {};
             app.timeOnTask = 0;
 
             this.$task = $('#task');
-            this.$next_task = $('#next-task');
-            this.$next_task_val = null;
+            this.$following_task = $('#following-task');
+            this.$following_task_val = null;
         },
 
         render: function() {
@@ -35,8 +35,8 @@ var app = app || {};
             var seconds_in_minutes = $('#minutes').val() * 60;
             var seconds = $('#seconds').val();
             var total_seconds = (+(seconds_in_hours) + +(seconds_in_minutes) + +(seconds));
-            var $next_task_name = $('#next-task-name');
-            this.$next_task_val = this.$task.val();
+            var $following_task_name = $('#following-task-name');
+            this.$following_task_val = this.$task.val();
 
             if (!total_seconds && !app.hasInitialTask) {
                 total_seconds = 1;
@@ -60,9 +60,9 @@ var app = app || {};
 
             app.timeOnTask = this.secondsToTime(total_seconds);
 
-            // Set the text for what the next task will be. '\u2014' is 
+            // Set the text for what the following task will be. '\u2014' is 
             // unicode for &mdash;
-            this.$next_task.html(this.$next_task_val + ' \u2014 Counting down from: ' + 
+            this.$following_task.html(this.$following_task_val + ' \u2014 Counting down from: ' + 
                 this.secondsToTime(total_seconds));
 
             if (app.hasInitialTask) {
@@ -71,7 +71,7 @@ var app = app || {};
                 this.alarm();
                 $('#current-task').css('display', 'block');
                 $('#current-notes-input').css('display', 'block');
-                $('#next-notes-input').css('display', 'block');
+                $('#following-notes-input').css('display', 'block');
             }
 
             var i = 0;
@@ -85,12 +85,12 @@ var app = app || {};
                     ++i;
                     $task_bar.css('display', 'none');
                     $('#usage-timer').css('display', 'none');
-                    $next_task_name.css('display', 'block');
+                    $following_task_name.css('display', 'block');
                     $time_bar.css('display', 'block');
                     $update_time.html(that.secondsToTime(total_seconds - i));
                     setTimeout(timerLoop, 1000);
 
-                    // Cancel the timer/next task:
+                    // Cancel the timer/following task:
                     if (app.cancel) {
                         $time_bar.css('display', 'none');
                         total_seconds = 0;
@@ -109,7 +109,7 @@ var app = app || {};
                 } else {
                     $task_bar.css('display', 'block');
                     $('#usage-timer').css('display', 'none');
-                    $next_task_name.css('display', 'none');
+                    $following_task_name.css('display', 'none');
                     document.taskbar.task.focus();
                 }
             }
@@ -123,14 +123,14 @@ var app = app || {};
 
         alarm: function() {
             var $current_task_text = $('#current-task-text').html();
-            this.$next_task_val = this.$next_task_val;
+            this.$following_task_val = this.$following_task_val;
 
-            // Alert the user they can start the next task now
+            // Alert the user they can start the following task now
             if (app.hasInitialTask && !app.stop) {
                 if ($('#sound-check').is(':checked')) {
                     document.getElementById('chime').play();
                 }
-                alert('Time to ' + this.$next_task_val);
+                alert('Time to ' + this.$following_task_val);
             }
 
             app.stop = false; // reset
@@ -145,13 +145,13 @@ var app = app || {};
                 });
             }
 
-            $('#current-task-text').html(this.$next_task_val);
+            $('#current-task-text').html(this.$following_task_val);
 
             this.updateNotes();
 
-            // Change the task input bar to accept next task(s)
+            // Change the task input bar to accept following task(s)
             if (app.hasInitialTask) {
-                $('#task-desc').html('Next Task ');
+                $('#task-desc').html('Following Task ');
                 $('#usage-no-timer').css('display', 'none');
                 $('#usage-timer').css('display', 'block');
                 $('#timer-input').css('display', 'block');
@@ -160,14 +160,14 @@ var app = app || {};
             this.cleanUp();
         },
 
-        // Moves the next task's notes to the current task's notes
+        // Moves the following task's notes to the current task's notes
         updateNotes: function() {
-            $('#current-textarea').val($('#next-textarea').val());
-            $('#next-textarea').val('');
+            $('#current-textarea').val($('#following-textarea').val());
+            $('#following-textarea').val('');
         },
 
         cleanUp: function() {
-            $('#next-task').html('');
+            $('#following-task').html('');
             // Make the countdown clock disappear:
             $('#time-bar').css('display', 'none');
             document.taskbar.task.focus();
@@ -219,7 +219,7 @@ var app = app || {};
             var msg = $(e.target).data('msg');
             var current = $('#' + id_name).html();
             
-            if (current.indexOf('\u2014') != -1) { // Edit next task
+            if (current.indexOf('\u2014') != -1) { // Edit following task
                 var new_task = prompt(msg, current.substring(0, current.indexOf('\u2014')));
                 if (new_task != null && new_task != '') {
                     new_task += ' \u2014 Counting down from: ' + app.timeOnTask;
