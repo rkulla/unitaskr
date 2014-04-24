@@ -18,8 +18,12 @@ h2 {
 
 
 a, a#visited {
+    background-color: #f2f8fc;
+    border: solid 1px #dbe7f3;
+    padding: 0 3px;
     color: #0000FF;
     font-size: .9em;
+    text-decoration: none;
 }
 
 
@@ -244,4 +248,22 @@ legend {
 
 #next-link, #delete-link {
     text-decoration: none;
+    background-color: #EBA80D;
+    border: 1px solid #F7D994;
+    padding: 0 3px;
+    font-size: .9em;
+}
+
+a:hover, a:focus, #next-link:hover, #delete-link:focus, #delete-link:hover, #delete-link:focus {
+    background: #CCC;
+    border: solid 1px #2A4E77;
+    text-decoration: none;
+}
+
+a:active, #next-link:active, #delete-link:active {
+    -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
+    -moz-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
+    background: #2E5481;
+    border: solid 1px #203E5F;
 }

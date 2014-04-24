@@ -5,9 +5,9 @@ block content
   h2 One task at a time.
 
   script#todoTaskTemplate(type='text/template')
-    a#delete-link(href='#', class='deleteTodoTask', title='Delete from this todo list') [X]
+    a#delete-link(href='#', class='deleteTodoTask', title='Delete from this todo list') X
     | &nbsp;
-    a#next-link(href='#', class='nextTodoTask', title='Set as the next task') [Do Next]
+    a#next-link(href='#', class='nextTodoTask', title='Set as the next task') Do next
     | &nbsp;
     input(type='checkbox', title='Done')
     | &nbsp;
@@ -44,7 +44,7 @@ block content
         strong Currently Set Task: &nbsp;
       span#current-task-text
       span &nbsp;
-        a(href='#', data-target='current-task-text', data-msg='Current Task') [edit]
+        a(href='#', data-target='current-task-text', data-msg='Current Task') Edit
 
     section
       p#usage-no-timer Enter the first task.
@@ -73,26 +73,29 @@ block content
           input#sound-check(type="checkbox", title="Play sound with alarm", value="sound", checked)
 
     section#time-bar
-      span#update-time &nbsp;
-      a#stop-countdown(href='#') stop early &nbsp;
-      a#cancel-countdown(href='#') cancel
+      span#update-time
+      | &nbsp;&nbsp;
+      a#stop-countdown(href='#') Stop early
+      | &nbsp;&nbsp;
+      a#cancel-countdown(href='#') Cancel
 
     section#next-task-name
       span
         strong Next Task: &nbsp;
-      span#next-task .larger-text ? &nbsp;
+      span#next-task .larger-text ?
+      | &nbsp;&nbsp;
       span
-        a(href='#', data-target='next-task', msg='Next Task') [edit]
+        a(href='#', data-target='next-task', msg='Next Task') Edit
 
   section#notes
     fieldset#current-notes-input
       legend Current Task Notes &nbsp;
-        a#current-notes(href='#') [clear]
+        a#current-notes(href='#') Clear
       textarea#current-textarea(rows='6', cols='20')
 
     fieldset#next-notes-input
       legend Next Task Notes &nbsp;
-        a#next-notes(href='#') [clear]
+        a#next-notes(href='#') Clear
       textarea#next-textarea(rows='6', cols='20')
 
   section#todo

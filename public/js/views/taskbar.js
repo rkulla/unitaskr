@@ -181,7 +181,7 @@ var app = app || {};
             // Format the text and include proper pluralization
             var hours_text = (hours == 1 ? ' hour, ' : ' hours, ');
             var minutes_text = (minutes == 1 ? ' minute and ' : ' minutes and ');
-            var seconds_text = (seconds == 1 ? ' second.' : ' seconds.');
+            var seconds_text = (seconds == 1 ? ' second' : ' seconds');
 
             return hours + hours_text + minutes + minutes_text + seconds + seconds_text;
         },
