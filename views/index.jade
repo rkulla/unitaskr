@@ -60,9 +60,6 @@ block content
             strong#task-desc Current Task &nbsp;
             input#task(type='text', placeholder='Task', autofocus)
             input(type='submit', value='Set')
-        section
-          label(for='sound') Sound
-          input#sound-check(type="checkbox", title="Play sound with alarm", value="sound", checked)
 
     section#time-bar
       span#update-time
@@ -78,6 +75,10 @@ block content
       | &nbsp;&nbsp;
       span
         a(href='#', data-target='following-task', msg='Following Task') Edit
+
+    section
+      label(for='sound') Sound
+      input#sound-check(type="checkbox", title="Play sound with alarm", value="sound", checked)
 
   section#notes
     fieldset#current-notes-input

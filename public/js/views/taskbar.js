@@ -62,7 +62,7 @@ var app = app || {};
 
             // Set the text for what the following task will be. '\u2014' is 
             // unicode for &mdash;
-            this.$following_task.html(this.$following_task_val + ' \u2014 Counting down from: ' + 
+            this.$following_task.html(this.$following_task_val + ' \u2014 Length: ' + 
                 this.secondsToTime(total_seconds));
 
             if (app.hasInitialTask) {
@@ -219,7 +219,7 @@ var app = app || {};
             if (current.indexOf('\u2014') != -1) { // Edit following task
                 var new_task = prompt(msg, current.substring(0, current.indexOf('\u2014')));
                 if (new_task != null && new_task != '') {
-                    new_task += ' \u2014 Counting down from: ' + app.timeOnTask;
+                    new_task += ' \u2014 Length: ' + app.timeOnTask;
                 }
             } else {
                 var new_task = prompt(msg, current); // Edit current task
