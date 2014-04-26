@@ -1,6 +1,7 @@
 
-
-Unitaskr is a productivity tool (using Backbone JS, HTML5 and Node Express) that allows you to set tasks you want to perform, and add a timer. It comes with a built-in Todo-list, as well as features for note taking and task history.
+Description
+===========
+*Unitaskr* is a productivity tool (uses `Backbone.js`, `Node Express`, `Browserify` and `HTML5`) that allows you to set tasks you want to perform, and add a timer. It comes with a built-in Todo-list, as well as features for note taking and task history.
 
 Unitasking (a.k.a Monotasking), means creating blocks of time to perform  one task at a time. Thus, it's the opposite of multi-tasking.
 
@@ -10,18 +11,15 @@ I'm a fan of the Pomodoro technique, so I made the timer default to 25 minutes. 
 
 Note that Unitaskr currently doesn't save anything, so if you refresh the page you will restart the program.
 
-Installing
-==========
-Change directories to the top of unitaskr/ and run:
-
-    $ npm install
-
-Running
-========
+Using
+=====
 Make sure to disable pop-up blocking, or add http://localhost:3000/ to your pop-up blocker's exceptions list.
 
-Change directories to the top of unitaskr/ and run:
+Change directories to the top of the unitaskr project direcotry and run:
 
-    $ node app
+    $ npm install
+    $ npm start
 
-Now just go to http://localhost:3000 in your browser.
+Now just go to http://localhost:3000 in your browser. 
+
+You only need to `npm install` once. In future uses just run `npm start`.
