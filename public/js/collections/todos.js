@@ -1,13 +1,15 @@
-var app = app || {};
+var Backbone = require('backbone');
+var Todo = require('../models/todo');
 
 (function() {
     'use strict';
 
     var TodoList = Backbone.Collection.extend({
 
-        model: app.Todo,
+        model: Todo,
+
     });
 
-    app.Todos = new TodoList();
+    module.exports = new TodoList();
 
 }());

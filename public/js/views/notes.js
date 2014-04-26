@@ -1,9 +1,11 @@
-var app = app || {};
+var jQuery = require('jquery');
+var Backbone = require('Backbone');
+Backbone.$ = jQuery;
 
 (function($) {
     'use strict';
 
-    app.NotesView = Backbone.View.extend({
+    module.exports = Backbone.View.extend({
         el: '#notes',
 
         events: {

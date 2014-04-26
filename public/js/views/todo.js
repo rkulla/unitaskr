@@ -1,28 +1,12 @@
-var app = app || {};
+var jQuery = require('jquery');
+var Backbone = require('backbone');
+var _ = require('underscore');
+Backbone.$ = jQuery;
 
 (function($) {
     'use strict';
 
-    // This view gets todo input from the todo form
-    app.TodoInputView = Backbone.View.extend({
-
-        el: '#todo',
-
-        events: {
-            'submit form': 'setTodoTask',
-        },
-
-        setTodoTask: function(e) {
-            e.preventDefault();
-
-            // Trigger the 'add' event in AppView
-            // which calls the TodoView
-            app.Todos.add({task: $('#todo-task').val()});
-        },
-
-    });
-
-    app.TodoView = Backbone.View.extend({
+    module.exports = Backbone.View.extend({
         tagName: 'li',
 
         events: {

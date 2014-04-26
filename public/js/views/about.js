@@ -1,9 +1,11 @@
-var app = app || {};
+var Backbone = require('backbone');
+var jQuery = require('jquery');
 
 (function($) {
     'use strict';
 
-    app.AboutView = Backbone.View.extend({
+    module.exports = Backbone.View.extend({
+
         el: '#about-container',
 
         events: {

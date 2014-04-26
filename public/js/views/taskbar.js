@@ -1,9 +1,16 @@
-var app = app || {};
+var jQuery = require('jquery');
+var Backbone = require('backbone');
+Backbone.$ = jQuery;
+var CompletedTask = require('../models/completed-task');
 
 (function($) {
     'use strict';
 
-    app.TaskbarView = Backbone.View.extend({
+    // global object to this class. We don't use 'this'
+    // because we copy 'this' to 'that' later.
+    var TB = {};
+
+    module.exports = Backbone.View.extend({
         el: '#taskbar-container',
 
         events: {
@@ -15,10 +22,10 @@ var app = app || {};
         },
 
         initialize: function() {
-            app.hasInitialTask = false;
-            app.stop = false;
-            app.cancel = false;
-            app.timeOnTask = 0;
+            TB.hasInitialTask = false;
+            TB.stop = false;
+            TB.cancel = false;
+            TB.timeOnTask = 1;
 
             this.$task = $('#task');
             this.$following_task = $('#following-task');
@@ -38,7 +45,7 @@ var app = app || {};
             var $following_task_name = $('#following-task-name');
             this.$following_task_val = this.$task.val();
 
-            if (!total_seconds && !app.hasInitialTask) {
+            if (!total_seconds && !TB.hasInitialTask) {
                 total_seconds = 1;
             }
 
@@ -49,7 +56,7 @@ var app = app || {};
             }
 
             // Validate user input
-            if (total_seconds == 0 && app.hasInitialTask) {
+            if (total_seconds == 0 && TB.hasInitialTask) {
                 alert('Please enter a time.');
                 $('#minutes').select();
                 return false;
@@ -58,14 +65,14 @@ var app = app || {};
             // Clear last inputted task value
             this.$task.val('');
 
-            app.timeOnTask = this.secondsToTime(total_seconds);
+            TB.timeOnTask = this.secondsToTime(total_seconds);
 
             // Set the text for what the following task will be. '\u2014' is 
             // unicode for &mdash;
             this.$following_task.html(this.$following_task_val + ' \u2014 Length: ' + 
                 this.secondsToTime(total_seconds));
 
-            if (app.hasInitialTask) {
+            if (TB.hasInitialTask) {
                 setTimeout(timerLoop, 1000);
             } else { 
                 this.alarm();
@@ -90,17 +97,17 @@ var app = app || {};
                     setTimeout(timerLoop, 1000);
 
                     // Cancel the timer/following task:
-                    if (app.cancel) {
+                    if (TB.cancel) {
                         $time_bar.css('display', 'none');
                         total_seconds = 0;
-                        app.cancel = false;
+                        TB.cancel = false;
                     }
 
                     // Stop the timer early:
-                    if (app.stop) {
+                    if (TB.stop) {
                         $time_bar.css('display', 'none');
                         // Recalulate how much time was spent on the task:
-                        app.timeOnTask = that.secondsToTime(i);
+                        TB.timeOnTask = that.secondsToTime(i);
                         i = total_seconds;
                     }
 
@@ -124,21 +131,21 @@ var app = app || {};
             this.$following_task_val = this.$following_task_val;
 
             // Alert the user they can start the following task now
-            if (app.hasInitialTask && !app.stop) {
+            if (TB.hasInitialTask && !TB.stop) {
                 if ($('#sound-check').is(':checked')) {
                     document.getElementById('chime').play();
                 }
                 alert('Time to ' + this.$following_task_val);
             }
 
-            app.stop = false; // reset
-            app.hasInitialTask = true;
+            TB.stop = false; // reset
+            TB.hasInitialTask = true;
 
             // Apppend the current task to the Completed Tasks box:
             if ($current_task_text != '') {
-                app.CompletedTask.set({
+                CompletedTask.set({
                     task: $current_task_text,
-                    timeSpent: app.timeOnTask,
+                    timeSpent: TB.timeOnTask,
                     timeEnded: this.getTimeNow(),
                 });
             }
@@ -148,7 +155,7 @@ var app = app || {};
             this.updateNotes();
 
             // Change the task input bar to accept following task(s)
-            if (app.hasInitialTask) {
+            if (TB.hasInitialTask) {
                 $('#task-desc').html('Following Task ');
                 $('#task-input input[type=submit]').val('Start');
                 $('#timer-input').css('display', 'block');
@@ -219,7 +226,7 @@ var app = app || {};
             if (current.indexOf('\u2014') != -1) { // Edit following task
                 var new_task = prompt(msg, current.substring(0, current.indexOf('\u2014')));
                 if (new_task != null && new_task != '') {
-                    new_task += ' \u2014 Length: ' + app.timeOnTask;
+                    new_task += ' \u2014 Length: ' + TB.timeOnTask;
                 }
             } else {
                 var new_task = prompt(msg, current); // Edit current task
@@ -239,12 +246,12 @@ var app = app || {};
 
         stopCountdown: function(e) {
             e.preventDefault();
-            app.stop = true;
+            TB.stop = true;
         },
 
         cancelCountdown: function(e) {
             e.preventDefault();
-            app.cancel = true;
+            TB.cancel = true;
         },
 
     });

@@ -1,13 +1,19 @@
+var jQuery = require('jquery');
+var Backbone = require('backbone');
+Backbone.$ = jQuery;
+var _ = require('underscore');
+var CompletedTask = require('../models/completed-task');
+
 var app = app || {};
 
 (function($) {
     'use strict';
 
-    app.CompletedTasksView = Backbone.View.extend({
+    module.exports = Backbone.View.extend({
 
         el: '#completed-tasks',
 
-        model: app.CompletedTask,
+        model: CompletedTask,
 
         initialize: function() {
             this.listenTo(this.model, 'change', this.render);

@@ -1,9 +1,11 @@
-var app = app || {};
+var jQuery = require('jquery');
+var Backbone = require('backbone');
+Backbone.$ = jQuery;
 
 (function($) {
     'use strict';
 
-    app.Todo = Backbone.Model.extend({
+    module.exports = Backbone.Model.extend({
 
     });
 
