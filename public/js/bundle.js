@@ -12075,6 +12075,7 @@ module.exports=require(2)
 },{}],7:[function(require,module,exports){
 // Main entry point. This is the file to call with browserify:
 // $ browserify public/js/app.js -o public/js/bundle.js
+// (which you can run with: npm build)
 var $ = require('jquery');
 AppView = require('./views/app');
 
@@ -12283,7 +12284,7 @@ var CompletedTask = require('../models/completed-task');
 (function($) {
     'use strict';
 
-    // global variables to this class. We don't use this
+    // global object to this class. We don't use 'this'
     // because we copy 'this' to 'that' later.
     var TB = {};
 

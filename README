@@ -11,7 +11,7 @@ I'm a fan of the Pomodoro technique, so I made the timer default to 25 minutes. 
 
 Note that Unitaskr currently doesn't save anything, so if you refresh the page you will restart the program.
 
-Using
+Usage
 =====
 Make sure to disable pop-up blocking, or add http://localhost:3000/ to your pop-up blocker's exceptions list.
 
@@ -23,3 +23,13 @@ Change directories to the top of the unitaskr project direcotry and run:
 Now just go to http://localhost:3000 in your browser. 
 
 You only need to `npm install` once. In future uses just run `npm start`.
+
+For Developers
+==============
+Do the usage steps and then install the browserify command on your machine:
+
+    $ npm install browserify -g
+
+and whenever you change a javascript file run:
+
+    $ npm run build
