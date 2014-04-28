@@ -13,7 +13,7 @@ Note that Unitaskr currently uses localStorage to save a copy of your todo list 
 
 Usage
 =====
-Make sure to disable pop-up blocking, or add http://localhost:3000/ to your pop-up blocker's exceptions list.
+Requirements: `npm`.
 
 Change directories to the top of the unitaskr project direcotry and run:
 
@@ -22,7 +22,9 @@ Change directories to the top of the unitaskr project direcotry and run:
 
 Now just go to http://localhost:3000 in your browser. 
 
-You only need to `npm install` once. In future uses just run `npm start`.
+Make sure to disable pop-up blocking, or add http://localhost:3000/ to your pop-up blocker's exceptions list.
+
+You only need to `npm install` once. In future uses just run `npm start`. You can also close the `npm start` command in you terminal with Ctrl-C and Unitaskr will continue to run because it will have been fully loaded onto the browser!
 
 For Developers
 ==============
