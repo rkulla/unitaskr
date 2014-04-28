@@ -6,7 +6,6 @@ Backbone.$ = jQuery;
     'use strict';
 
     module.exports = Backbone.Model.extend({
-
     });
 
 }(jQuery));

@@ -20,6 +20,9 @@ var CompletedTasksView = require('./completed-tasks');
 
             // Self render this view
             this.render();
+
+            // Load any preexisting todos that might be in localStorage
+            Todos.fetch(); 
         },
 
         render: function() {

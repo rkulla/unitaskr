@@ -12,6 +12,7 @@
     "stylus": "0.44.0",
     "backbone": "~1.1.2",
     "jquery": "~2.1.0",
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "backbone.localstorage": "~1.1.7"
   }
 }
