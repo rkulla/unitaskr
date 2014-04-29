@@ -1,30 +1,24 @@
-var jQuery = require('jquery');
+'use strict';
+
+var $ = require('jquery');
 var Backbone = require('backbone');
-Backbone.$ = jQuery;
 var _ = require('underscore');
 var CompletedTask = require('../models/completed-task');
 
-var app = app || {};
+module.exports = Backbone.View.extend({
 
-(function($) {
-    'use strict';
+    el: '#completed-tasks',
 
-    module.exports = Backbone.View.extend({
+    model: CompletedTask,
 
-        el: '#completed-tasks',
+    initialize: function() {
+        this.listenTo(this.model, 'change', this.render);
+    },
 
-        model: CompletedTask,
+    render: function() {
+        var template = _.template($('#completedTaskTemplate').html(), this.model.toJSON());
+        this.$el.append(template);
+        return this;
+    },
 
-        initialize: function() {
-            this.listenTo(this.model, 'change', this.render);
-        },
-
-        render: function() {
-            var template = _.template($('#completedTaskTemplate').html(), this.model.toJSON());
-            this.$el.append(template);
-            return this;
-        },
-    });
-
-})(jQuery);
-
+});

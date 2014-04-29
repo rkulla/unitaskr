@@ -1,32 +1,29 @@
+'use strict';
+
 var Backbone = require('backbone');
-var jQuery = require('jquery');
+var $ = require('jquery');
 
-(function($) {
-    'use strict';
+module.exports = Backbone.View.extend({
 
-    module.exports = Backbone.View.extend({
+    el: '#about-container',
 
-        el: '#about-container',
+    events: {
+        'click #about-button': 'showAbout',
+        'click #hide-about': 'hideAbout',
+    },
 
-        events: {
-            'click #about-button': 'showAbout',
-            'click #hide-about': 'hideAbout',
-        },
+    render: function() {
+        return this;
+    },
 
-        render: function() {
-            return this;
-        },
+    showAbout: function() {
+        $('#about').css('display', 'block');
+        $('#about-button').css('display', 'none');
+    },
 
-        showAbout: function() {
-            $('#about').css('display', 'block');
-            $('#about-button').css('display', 'none');
-        },
+    hideAbout: function() {
+        $('#about').empty();
+        $('#about-button').css('display', 'block');
+    },
 
-        hideAbout: function() {
-            $('#about').empty();
-            $('#about-button').css('display', 'block');
-        },
-
-    });
-
-})(jQuery);
+});

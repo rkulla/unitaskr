@@ -1,11 +1,9 @@
-var jQuery = require('jquery');
+'use strict';
+
+var $ = require('jquery');
 var Backbone = require('backbone');
-Backbone.$ = jQuery;
+Backbone.$ = $; // needed
 
-(function($) {
-    'use strict';
+module.exports = Backbone.Model.extend({
 
-    module.exports = Backbone.Model.extend({
-    });
-
-}(jQuery));
+});
