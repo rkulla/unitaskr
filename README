@@ -1,7 +1,9 @@
 
 Description
 ===========
-*Unitaskr* is a productivity tool (uses `Backbone.js`, `Node Express`, `Browserify` and `HTML5`) that allows you to set tasks you want to perform, and add a timer. It comes with a built-in Todo-list, as well as features for note taking and task history.
+*Unitaskr* is a productivity tool that allows you to set tasks you want to perform, and add a timer. It comes with a built-in Todo-list, as well as features for note taking and task history.
+
+It uses `Backbone.js`, `HTML5`, Node.js `Express`, `Browserify` and `Gulp'.
 
 Unitasking (a.k.a Monotasking), means creating blocks of time to perform  one task at a time. Thus, it's the opposite of multi-tasking.
 
@@ -17,7 +19,7 @@ Requirements: `npm`.
 
 Change directories to the top of the unitaskr project direcotry and run:
 
-    $ npm install
+    $ npm install --production
     $ npm start
 
 Now just go to http://localhost:3000 in your browser. 
@@ -28,10 +30,18 @@ You only need to `npm install` once. In future uses just run `npm start`. You ca
 
 Contributing
 ============
-Do the usage steps and then install the browserify command on your machine:
+Install the devDependencies (leave out the --production flag):
+
+    $ npm install
+
+Then install the browserify command to your machine:
 
     $ npm install browserify -g
 
-and whenever you change a javascript file run:
+Whenever you change a javascript file run:
 
     $ npm run build
+
+Or better yet, automate the bundle updates by running `watchify`:
+
+    $ gulp watch

@@ -14,5 +14,10 @@
     "jquery": "~2.1.0",
     "underscore": "~1.6.0",
     "backbone.localstorage": "~1.1.7"
+  },
+  "devDependencies": {
+    "gulp": "~3.6.2",
+    "watchify": "~0.8.2",
+    "vinyl-source-stream": "~0.1.1"
   }
 }
