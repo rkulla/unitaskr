@@ -45,3 +45,7 @@ Whenever you change a javascript file run:
 Or better yet, automate the bundle updates by running `watchify`:
 
     $ gulp watch
+
+You can run the `mocha` unit tests with:
+
+    $ npm run test

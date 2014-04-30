@@ -3,6 +3,7 @@
 var $ = require('jquery');
 var Backbone = require('backbone');
 var CompletedTask = require('../models/completed-task');
+var unitaskrTime = require('../utils/unitaskr-time');
 // Global object to this class. We don't use 'this'
 // because we copy 'this' to 'that' later.
 var TB = {};
@@ -63,12 +64,12 @@ module.exports = Backbone.View.extend({
         // Clear last inputted task value
         this.$task.val('');
 
-        TB.timeOnTask = this.secondsToTime(total_seconds);
+        TB.timeOnTask = unitaskrTime.secondsToTime(total_seconds);
 
         // Set the text for what the following task will be. '\u2014' is 
         // unicode for &mdash;
         this.$following_task.html(this.$following_task_val + ' \u2014 Length: ' + 
-            this.secondsToTime(total_seconds));
+            unitaskrTime.secondsToTime(total_seconds));
 
         if (TB.hasInitialTask) {
             setTimeout(timerLoop, 1000);
@@ -91,7 +92,7 @@ module.exports = Backbone.View.extend({
                 $task_bar.css('display', 'none');
                 $following_task_name.css('display', 'block');
                 $time_bar.css('display', 'block');
-                $update_time.html(that.secondsToTime(total_seconds - i));
+                $update_time.html(unitaskrTime.secondsToTime(total_seconds - i));
                 setTimeout(timerLoop, 1000);
 
                 // Cancel the timer/following task:
@@ -105,7 +106,7 @@ module.exports = Backbone.View.extend({
                 if (TB.stop) {
                     $time_bar.css('display', 'none');
                     // Recalulate how much time was spent on the task:
-                    TB.timeOnTask = that.secondsToTime(i);
+                    TB.timeOnTask = unitaskrTime.secondsToTime(i);
                     i = total_seconds;
                 }
 
@@ -144,7 +145,7 @@ module.exports = Backbone.View.extend({
             CompletedTask.set({
                 task: $current_task_text,
                 timeSpent: TB.timeOnTask,
-                timeEnded: this.getTimeNow(),
+                timeEnded: unitaskrTime.getTimeNow(),
             });
         }
 
@@ -173,46 +174,6 @@ module.exports = Backbone.View.extend({
         // Make the countdown clock disappear:
         $('#time-bar').css('display', 'none');
         document.taskbar.task.focus();
-    },
-
-    zeroPad: function(n, s) {
-        // Return 5 as "05", etc. and append a small string
-        // e.g., 'h' for '05h'.
-        return ('00' + n.toString()).slice(-2) + '<small>'+s+'</small> ';
-    },
-
-    secondsToTime: function(total_secs) {
-        var hours = Math.floor(total_secs / 3600);
-        var mins = Math.floor((total_secs % 3600) / 60);
-        var secs = Math.round((((total_secs % 3600) / 60) - mins) * 60);
-        return this.zeroPad(hours, 'h') + this.zeroPad(mins, 'm') + 
-            this.zeroPad(secs, 's');
-    },
-
-    getTimeNow: function() {
-        // Figure out what the time/date is right now
-        // Uses the format: month/day/year hour:minute:second AM/PM
-        var currentTime = new Date();
-        var month = currentTime.getMonth() + 1;
-        var day = currentTime.getDate();
-        var year = currentTime.getFullYear();
-        var hour = currentTime.getHours();
-        var minute = currentTime.getMinutes();
-
-        if (minute < 10) {
-            minute = '0' + minute;
-        }
-        var second = currentTime.getSeconds();
-        if (second < 10) {
-            second = '0' + second;
-        }
-        var ampm = hour > 11 ? 'PM' : 'AM';
-
-        // Convert from 24 hour time to 12 hour time:
-        hour = hour % 12 || 12;
-
-        return month + '/' + day + '/' + year + ' ' + hour + ':' + 
-                    minute + ':' + second + ' ' + ampm;
     },
 
     editTask: function(e) {
