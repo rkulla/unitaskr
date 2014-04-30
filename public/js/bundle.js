@@ -13602,7 +13602,7 @@ module.exports = Backbone.View.extend({
     },
 
     hideAbout: function() {
-        $('#about').empty();
+        $('#about').css('display', 'none');
         $('#about-button').css('display', 'block');
     },
 
