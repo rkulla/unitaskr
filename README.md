@@ -38,14 +38,13 @@ Then install the browserify command to your machine:
 
     $ npm install browserify -g
 
-Whenever you change a javascript file run:
-
-    $ npm run build
-
-Or better yet, automate the bundle updates by running `watchify`:
+Whenever you change a javascript file you need to browserify
+the bundle.js, you can automate the updates with gulp:
 
     $ gulp watch
 
+this will run `watchify` and sit in the terminal.
+
 You can run the `mocha` unit tests with:
 
-    $ npm test
+    $ gulp test

@@ -1,3 +1,4 @@
+var should = require('should'); // still needed for gulp-mocha
 var uTime = require('../public/js/utils/unitaskr-time');
 
 describe('unitaskr-time', function(){
