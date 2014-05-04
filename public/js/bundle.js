@@ -13799,6 +13799,12 @@ module.exports = Backbone.View.extend({
         var seconds_in_minutes = $('#minutes').val() * 60;
         var seconds = $('#seconds').val();
         var total_seconds = (+(seconds_in_hours) + +(seconds_in_minutes) + +(seconds));
+        var i = 0;
+        var that = this;
+        var interval = 1000; // 1 FPS
+        var then = Date.now();
+        var delta;
+        var now;
         var $following_task_name = $('#following-task-name');
         this.$following_task_val = this.$task.val();
 
@@ -13838,20 +13844,27 @@ module.exports = Backbone.View.extend({
             $('#following-notes-input').css('display', 'block');
         }
 
-        var i = 0;
-        var that = this;
         function timerLoop() {
             var $update_time = $('#update-time');
             var $task_bar = $('#task-bar');
             var $time_bar = $('#time-bar');
 
             if (i < total_seconds) {
-                ++i;
                 $task_bar.css('display', 'none');
                 $following_task_name.css('display', 'block');
                 $time_bar.css('display', 'block');
-                $update_time.html(unitaskrTime.secondsToTime(total_seconds - i));
-                setTimeout(timerLoop, 1000);
+
+                // Use rAF to avoid wasting CPU/battery-life when 
+                // browser tab isn't focused 
+                requestAnimationFrame(timerLoop);
+                now = Date.now();
+                delta = now - then;
+
+                if (delta > interval) {
+                    ++i;
+                    then = now - (delta % interval);
+                    $update_time.html(unitaskrTime.secondsToTime(total_seconds - i));
+                }
 
                 // Cancel the timer/following task:
                 if (TB.cancel) {
