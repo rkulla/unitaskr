@@ -13774,6 +13774,7 @@ module.exports = Backbone.View.extend({
         'click #current-task a': 'editTask',
         'click #following-task-name a': 'editTask',
         'click #stop-countdown': 'stopCountdown',
+        'click #pause-countdown': 'pauseCountdown',
         'click #cancel-countdown': 'cancelCountdown',
         'submit form#taskbar': 'startTimer',
     },
@@ -13781,6 +13782,7 @@ module.exports = Backbone.View.extend({
     initialize: function() {
         TB.hasInitialTask = false;
         TB.stop = false;
+        TB.pause = false;
         TB.cancel = false;
         TB.timeOnTask = 1;
 
@@ -13854,13 +13856,14 @@ module.exports = Backbone.View.extend({
                 $following_task_name.css('display', 'block');
                 $time_bar.css('display', 'block');
 
-                // Use rAF to avoid wasting CPU/battery-life when 
-                // browser tab isn't focused 
+                // Use rAF, instead of setTimeout, to not waste CPU/battery-life 
+                // when the browser tab isn't focused, etc.
                 requestAnimationFrame(timerLoop);
+
                 now = Date.now();
                 delta = now - then;
 
-                if (delta > interval) {
+                if (delta > interval && !TB.pause) {
                     ++i;
                     then = now - (delta % interval);
                     $update_time.html(unitaskrTime.secondsToTime(total_seconds - i));
@@ -13977,6 +13980,11 @@ module.exports = Backbone.View.extend({
     stopCountdown: function(e) {
         e.preventDefault();
         TB.stop = true;
+    },
+
+    pauseCountdown: function(e) {
+        e.preventDefault();
+        TB.pause ^= true; // Toggle
     },
 
     cancelCountdown: function(e) {
