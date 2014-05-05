@@ -13776,6 +13776,7 @@ module.exports = Backbone.View.extend({
         'click #stop-countdown': 'stopCountdown',
         'click #pause-countdown': 'pauseCountdown',
         'click #cancel-countdown': 'cancelCountdown',
+        'click #count-upward': 'countUpward',
         'submit form#taskbar': 'startTimer',
     },
 
@@ -13785,6 +13786,7 @@ module.exports = Backbone.View.extend({
         TB.pause = false;
         TB.cancel = false;
         TB.timeOnTask = 1;
+        TB.count_upward = false;
 
         this.$task = $('#task');
         this.$following_task = $('#following-task');
@@ -13802,6 +13804,7 @@ module.exports = Backbone.View.extend({
         var seconds = $('#seconds').val();
         var total_seconds = (+(seconds_in_hours) + +(seconds_in_minutes) + +(seconds));
         var i = 0;
+        var count = 0;
         var that = this;
         var interval = 1000; // 1 FPS
         var then = Date.now();
@@ -13809,6 +13812,11 @@ module.exports = Backbone.View.extend({
         var now;
         var $following_task_name = $('#following-task-name');
         this.$following_task_val = this.$task.val();
+
+        if (TB.count_upward) {
+            i = -1;
+            total_seconds = 0;
+        }
 
         if (!total_seconds && !TB.hasInitialTask) {
             total_seconds = 1;
@@ -13821,7 +13829,7 @@ module.exports = Backbone.View.extend({
         }
 
         // Validate user input
-        if (total_seconds == 0 && TB.hasInitialTask) {
+        if (total_seconds == 0 && TB.hasInitialTask && i != -1) {
             alert('Please enter a time.');
             $('#minutes').select();
             return false;
@@ -13851,7 +13859,7 @@ module.exports = Backbone.View.extend({
             var $task_bar = $('#task-bar');
             var $time_bar = $('#time-bar');
 
-            if (i < total_seconds) {
+            if (i < total_seconds || TB.count_upward) {
                 $task_bar.css('display', 'none');
                 $following_task_name.css('display', 'block');
                 $time_bar.css('display', 'block');
@@ -13866,7 +13874,8 @@ module.exports = Backbone.View.extend({
                 if (delta > interval && !TB.pause) {
                     ++i;
                     then = now - (delta % interval);
-                    $update_time.html(unitaskrTime.secondsToTime(total_seconds - i));
+                    count = TB.count_upward ? total_seconds+i : total_seconds-i;
+                    $update_time.html(unitaskrTime.secondsToTime(count));
                 }
 
                 // Cancel the timer/following task:
@@ -13874,10 +13883,12 @@ module.exports = Backbone.View.extend({
                     $time_bar.css('display', 'none');
                     total_seconds = 0;
                     TB.cancel = false;
+                    TB.count_upward = false;
                 }
 
                 // Stop the timer early:
                 if (TB.stop) {
+                    TB.count_upward = false;
                     $time_bar.css('display', 'none');
                     // Recalulate how much time was spent on the task:
                     TB.timeOnTask = unitaskrTime.secondsToTime(i);
@@ -13894,7 +13905,7 @@ module.exports = Backbone.View.extend({
     },
 
     checkTimer: function(i, total_seconds) {
-        if (i == total_seconds) {
+        if (i == total_seconds && !TB.count_upward) {
             this.alarm();
         }
     },
@@ -13975,6 +13986,12 @@ module.exports = Backbone.View.extend({
             alert('Please enter a task');
             edit_task(id_name, msg);
         }
+    },
+
+    countUpward: function(e) {
+        e.preventDefault();
+        TB.count_upward = true;
+        $('#timer-input').css('display', 'none');
     },
 
     stopCountdown: function(e) {

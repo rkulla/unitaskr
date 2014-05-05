@@ -56,6 +56,9 @@ block content
             input#minutes(type='text', size='1', value='25')
             label(for='hours') Seconds
             input#seconds(type='text', size='1', value='00')
+            | &nbsp;&nbsp;
+            span#count-direction
+            a#count-upward(href='#') Count Upward
           #task-input
             strong#task-desc Current Task &nbsp;
             input#task(type='text', placeholder='Task', autofocus)
