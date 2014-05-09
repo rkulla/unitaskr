@@ -26,7 +26,6 @@ module.exports = Backbone.View.extend({
         this.cancel = false;
         this.timeOnTask = 1;
         this.count_upward = false;
-
         this.$task = $('#task');
         this.$following_task = $('#following-task');
         this.$following_task_val = null;
@@ -41,7 +40,8 @@ module.exports = Backbone.View.extend({
         var seconds_in_hours = $('#hours').val() * 3600;
         var seconds_in_minutes = $('#minutes').val() * 60;
         var seconds = $('#seconds').val();
-        var total_seconds = (+(seconds_in_hours) + +(seconds_in_minutes) + +(seconds));
+        var total_seconds = (+(seconds_in_hours) + 
+                +(seconds_in_minutes) + +(seconds));
         var i = 0;
         var count = 0;
         var that = this;
@@ -68,11 +68,10 @@ module.exports = Backbone.View.extend({
         } else {
             this.hasInitialTask++;
             this.$task.val(''); // Clear last inputted task
-            $('#current-task').css('display', 'block');
-            $('#current-notes-input').css('display', 'block');
-            $('#following-notes-input').css('display', 'block');
-
+            $('#current-task, #current-notes-input, ' +
+              '#following-notes-input').css('display', 'block');
             this.$current_task_text = $('#current-task-text').html();
+
             if (this.hasInitialTask == 1) {
                 $('#current-task-text').html(this.$following_task_val);
             }
@@ -154,6 +153,19 @@ module.exports = Backbone.View.extend({
     checkTimer: function(i, total_seconds) {
         if (i == total_seconds && !this.count_upward) {
             this.alarm();
+
+            // Apppend the current task to the Completed Tasks box:
+            if (this.$current_task_text != '') {
+                CompletedTask.set({
+                    task: this.$current_task_text,
+                    timeSpent: this.timeOnTask,
+                    timeEnded: unitaskrTime.getTimeNow(),
+                });
+            }
+
+            $('#current-task-text').html(this.$following_task_val);
+            this.updateNotes();
+            this.cleanUp();
         }
     },
 
@@ -165,31 +177,17 @@ module.exports = Backbone.View.extend({
             }
             alert('Time to ' + this.$following_task_val);
         }
-
-        this.stop = false; // reset
-
-        // Apppend the current task to the Completed Tasks box:
-        if (this.$current_task_text != '') {
-            CompletedTask.set({
-                task: this.$current_task_text,
-                timeSpent: this.timeOnTask,
-                timeEnded: unitaskrTime.getTimeNow(),
-            });
-        }
-
-        $('#current-task-text').html(this.$following_task_val);
-
-        this.updateNotes();
-        this.cleanUp();
     },
 
     // Moves the following task's notes to the current task's notes
     updateNotes: function() {
-        $('#current-textarea').val($('#following-textarea').val());
-        $('#following-textarea').val('');
+        var $following_textarea = $('#following-textarea');
+        $('#current-textarea').val($following_textarea.val());
+        $following_textarea.val('');
     },
 
     cleanUp: function() {
+        this.stop = false; // reset
         $('#following-task').html('');
         // Make the countdown clock disappear:
         $('#time-bar').css('display', 'none');
@@ -200,23 +198,30 @@ module.exports = Backbone.View.extend({
         e.preventDefault();
         var id_name = $(e.target).data('target');
         var msg = $(e.target).data('msg');
-        var current = $('#' + id_name).html();
+        var cur = $('#' + id_name).html();
+        var mdash_index;
         
-        if (current.indexOf('\u2014') != -1) { // Edit following task
-            var new_task = prompt(msg, current.substring(0, current.indexOf('\u2014')));
-            if (new_task != null && new_task != '') {
-                new_task += ' \u2014 Length: ' + this.timeOnTask;
+        if (cur.indexOf('\u2014') != -1) { // Edit following task
+            mdash_index = cur.indexOf('\u2014');
+            cur = prompt(msg, cur.substring(0, mdash_index));
+            if (cur != null && cur != '') {
+                cur += ' \u2014 Length: ' + this.timeOnTask;
             }
         } else {
-            var new_task = prompt(msg, current); // Edit current task
+            cur = prompt(msg, cur); // Edit current task
         }
         
-        if (new_task == null) {
+        if (cur == null) {
             return false;
         }
             
-        if (new_task != '') {
-            $('#' + id_name).html(new_task);
+        if (cur != '') {
+            $('#' + id_name).html(cur);
+            if (id_name == 'current-task-text') {
+                this.$current_task_text = cur;
+            } else if (id_name == 'following-task') {
+                this.$following_task_val = cur.substring(0, mdash_index);
+            }
         } else {
             alert('Please enter a task');
             edit_task(id_name, msg);
