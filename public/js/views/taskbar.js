@@ -4,6 +4,13 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 var CompletedTask = require('../models/completed-task');
 var unitaskrTime = require('../utils/unitaskr-time');
+var io = require('socket.io-client');
+
+var socket = io.connect();
+var total_secs = 0;
+var ticks = 0;
+var then; // used later with 'now' and 'delta' for rAF
+var intervened = false; // For if we clicked cancel or stop
 
 module.exports = Backbone.View.extend({
 
@@ -20,15 +27,33 @@ module.exports = Backbone.View.extend({
     },
 
     initialize: function() {
-        this.hasInitialTask = 0;
-        this.stop = false;
+        this.tasks_ready = 0;
         this.pause = false;
-        this.cancel = false;
         this.timeOnTask = 1;
         this.count_upward = false;
         this.$task = $('#task');
         this.$following_task = $('#following-task');
         this.$following_task_val = null;
+        this.$task_bar = $('#task-bar');
+        this.$time_bar = $('#time-bar');
+        this.$update_time = $('#update-time');
+        var that = this;
+
+        socket.on('clocktick', function (data) {
+            ticks = data.tick_count;
+
+            // Use rAF, not setTimeout, to save on CPU/battery
+            // when the browser tab isn't focused.
+            if (ticks < total_secs) {
+                requestAnimationFrame(function() { that.rAF_cb(that); });
+            } 
+
+            // Since rAF goes out of focus on tab switch (blur)
+            // we still need to run the callback.
+            if (ticks >= total_secs) {
+                that.rAF_cb(that);
+            }
+        });
     },
 
     render: function() {
@@ -36,29 +61,23 @@ module.exports = Backbone.View.extend({
     },
 
     startTimer: function(e) {
-        e.preventDefault();
-        var seconds_in_hours = $('#hours').val() * 3600;
-        var seconds_in_minutes = $('#minutes').val() * 60;
-        var seconds = $('#seconds').val();
-        var total_seconds = (+(seconds_in_hours) + 
-                +(seconds_in_minutes) + +(seconds));
-        var i = 0;
-        var count = 0;
-        var that = this;
-        var interval = 1000; // 1 FPS
-        var then = Date.now();
-        var delta;
-        var now;
-        var $following_task_name = $('#following-task-name');
+        e.preventDefault(); // prevents form submission
+        var secs_in_hours = $('#hours').val() * 3600;
+        var secs_in_minutes = $('#minutes').val() * 60;
+        var secs = $('#seconds').val();
+        total_secs = (+(secs_in_hours) + 
+                +(secs_in_minutes) + +(secs));
+        then = Date.now();
+        this.$following_task_name = $('#following-task-name');
         this.$following_task_val = this.$task.val();
 
         if (this.count_upward) {
-            i = -1;
-            total_seconds = 0;
+            ticks = -1;
+            total_secs = 0;
         }
 
-        if (!total_seconds && !this.hasInitialTask) {
-            total_seconds = 1;
+        if (!total_secs && !this.tasks_ready) {
+            total_secs = 1;
         }
 
         if (this.$task.val() == '') {
@@ -66,15 +85,16 @@ module.exports = Backbone.View.extend({
             this.$task.focus();
             return false;
         } else {
-            this.hasInitialTask++;
+            this.tasks_ready++;
             this.$task.val(''); // Clear last inputted task
             $('#current-task, #current-notes-input, ' +
               '#following-notes-input').css('display', 'block');
-            this.$current_task_text = $('#current-task-text').html();
 
-            if (this.hasInitialTask == 1) {
+            if (this.tasks_ready == 1) {
                 $('#current-task-text').html(this.$following_task_val);
             }
+
+            this.$current_task_text = $('#current-task-text').html();
 
             // Change the task input bar to accept following task(s)
             $('#task-desc').html('Following Task ');
@@ -83,76 +103,64 @@ module.exports = Backbone.View.extend({
         }
 
         // Validate user input
-        if (total_seconds == 0 && this.hasInitialTask && i != -1) {
+        if (total_secs == 0 && this.tasks_ready && ticks != -1) {
             alert('Please enter a time.');
             $('#minutes').select();
             return false;
         }
 
-        this.timeOnTask = unitaskrTime.secondsToTime(total_seconds);
+        this.timeOnTask = unitaskrTime.secondsToTime(total_secs);
 
         // Set the text for what the following task will be. '\u2014' is 
         // unicode for &mdash;
         this.$following_task.html(this.$following_task_val + 
-            ' \u2014 Length: ' + unitaskrTime.secondsToTime(total_seconds));
+            ' \u2014 Length: ' + unitaskrTime.secondsToTime(total_secs));
 
-        if (this.hasInitialTask > 1) {
-            setTimeout(timerLoop, 1000);
+        if (this.tasks_ready > 1) {
+            this.showTaskInputs(false);
+            this.showTaskNames(true);
+            this.showTimeBar(true);
+
+            // send the amount of seconds entered to the server
+            socket.emit('clockstart', {
+                'total_secs':total_secs, 
+                'count_upward':this.count_upward, 
+            });
         } 
+    },
 
-        function timerLoop() {
-            var $update_time = $('#update-time');
-            var $task_bar = $('#task-bar');
-            var $time_bar = $('#time-bar');
+    rAF_cb: function(that) {
+        var count = 0;
+        var now;
+        var delta;
+        var interval = 1000; // 1 FPS
+        that.$update_time = $('#update-time');
 
-            if (i < total_seconds || that.count_upward) {
-                $task_bar.css('display', 'none');
-                $following_task_name.css('display', 'block');
-                $time_bar.css('display', 'block');
+        if (ticks <= total_secs || that.count_upward) {
+            var now = Date.now();
+            delta = now - then;
 
-                // Use rAF, instead of setTimeout, to not waste CPU/battery-life 
-                // when the browser tab isn't focused, etc.
-                requestAnimationFrame(timerLoop);
+            if (delta > interval && !that.pause) {
+                then = now - (delta % interval);
+                count = that.count_upward ? total_secs+ticks : total_secs-ticks;
 
-                now = Date.now();
-                delta = now - then;
-
-                if (delta > interval && !that.pause) {
-                    ++i;
-                    then = now - (delta % interval);
-                    count = that.count_upward ? total_seconds+i : total_seconds-i;
-                    $update_time.html(unitaskrTime.secondsToTime(count));
-                }
-
-                // Cancel the timer/following task:
-                if (that.cancel) {
-                    $time_bar.css('display', 'none');
-                    total_seconds = 0;
-                    that.cancel = false;
-                    that.count_upward = false;
-                }
-
-                // Stop the timer early:
-                if (that.stop) {
-                    that.count_upward = false;
-                    $time_bar.css('display', 'none');
-                    // Recalulate how much time was spent on the task:
-                    that.timeOnTask = unitaskrTime.secondsToTime(i);
-                    i = total_seconds;
-                }
-
-                that.checkTimer(i, total_seconds);
-            } else {
-                $task_bar.css('display', 'block');
-                $following_task_name.css('display', 'none');
-                document.taskbar.task.focus();
+                // Render the clock animation
+                that.$update_time.html(unitaskrTime.secondsToTime(count));
             }
+
+            that.checkTimer();
+        } else {
+            that.showTaskInputs(true);
+            that.showTaskNames(false);
         }
     },
 
-    checkTimer: function(i, total_seconds) {
-        if (i == total_seconds && !this.count_upward) {
-            this.alarm();
+    checkTimer: function() {
+        if (ticks >= total_secs && !this.count_upward) {
+
+            if (this.tasks_ready && !intervened) {
+                this.alarm();
+            }
 
             // Apppend the current task to the Completed Tasks box:
             if (this.$current_task_text != '') {
@@ -171,12 +179,13 @@ module.exports = Backbone.View.extend({
 
     alarm: function() {
         // Alert the user they can start the following task now
-        if (this.hasInitialTask && !this.stop) {
-            if ($('#sound-check').is(':checked')) {
-                document.getElementById('chime').play();
-            }
-            alert('Time to ' + this.$following_task_val);
+
+        if ($('#sound-check').is(':checked')) {
+            document.getElementById('chime').play();
         }
+
+        // TODO: make this configurable so they only get a sound
+        alert('Time to ' + this.$following_task_val);
     },
 
     // Moves the following task's notes to the current task's notes
@@ -187,11 +196,12 @@ module.exports = Backbone.View.extend({
     },
 
     cleanUp: function() {
-        this.stop = false; // reset
+        ticks = 0;
+        intervened = false;
         $('#following-task').html('');
-        // Make the countdown clock disappear:
-        $('#time-bar').css('display', 'none');
-        document.taskbar.task.focus();
+        this.showTimeBar(false);
+        this.showTaskInputs(true);
+        this.showTaskNames(false);
     },
 
     editTask: function(e) {
@@ -236,17 +246,43 @@ module.exports = Backbone.View.extend({
 
     stopCountdown: function(e) {
         e.preventDefault();
-        this.stop = true;
+        intervened = true;
+        this.count_upward = false;
+        this.showTimeBar(false);
+        // Recalulate how much time was spent on the task:
+        this.timeOnTask = unitaskrTime.secondsToTime(ticks);
+        socket.emit('clockstop');
+        ticks = total_secs; // for checkTimer
+        this.checkTimer();
+        this.cleanUp();
     },
 
     pauseCountdown: function(e) {
         e.preventDefault();
         this.pause ^= true; // Toggle
+        socket.emit('clockpause', {'pause':this.pause});
     },
 
     cancelCountdown: function(e) {
         e.preventDefault();
-        this.cancel = true;
+        intervened = true;
+        this.showTimeBar(false);
+        this.count_upward = false;
+        socket.emit('clockstop');
+        this.cleanUp();
+    },
+
+    showTaskInputs: function(toggle) {
+        this.$task_bar.css('display', (toggle ? 'block' : 'none'));
+        document.taskbar.task.focus();
+    },
+
+    showTaskNames: function(toggle) {
+        this.$following_task_name.css('display', (toggle ? 'block' : 'none'));
+    },
+
+    showTimeBar: function(toggle) {
+        this.$time_bar.css('display', (toggle ? 'block' : 'none'));
     },
 
 });
