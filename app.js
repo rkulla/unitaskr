@@ -32,24 +32,27 @@ http.listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
 });
 
+
 // Socket.io Handler
 io.sockets.on('connection', function (socket) {
-   var tick_count = 0;
-   var total_secs = 0;
-   var timer;
-   var count_upward = false;
+   var tick_count = 0,
+       total_secs = 0,
+       timer,
+       count_upward = false,
+       interval,
+       ticker;
 
    socket.on('clockstart', function (data) {
        total_secs = data.total_secs;
        count_upward = data.count_upward;
-       timer = setInterval(ticker, 1000);
+       interval = data.interval;
+       timer = setInterval(ticker, interval);
    });
 
-   var ticker = function() {
+   ticker = function() {
        if (tick_count <= total_secs || count_upward) {
            socket.emit('clocktick', {'tick_count':tick_count++});
        } else { // timer done
-           console.log("its me of course", tick_count);
            cancelTimer();
        }
    }
@@ -58,7 +61,7 @@ io.sockets.on('connection', function (socket) {
        if (data.pause) {
            clearInterval(timer);
        } else { // resume
-           timer = setInterval(ticker, 1000);
+           timer = setInterval(ticker, interval);
        }
    });
 
@@ -67,9 +70,7 @@ io.sockets.on('connection', function (socket) {
    });
 
    function cancelTimer() {
-       console.log('Cancelling current timer.');
        clearInterval(timer);
        tick_count = 0;
    }
-
 });

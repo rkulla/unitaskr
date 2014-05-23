@@ -1,16 +1,29 @@
 'use strict';
 
-var $ = require('jquery');
-var Backbone = require('backbone');
-var CompletedTask = require('../models/completed-task');
-var unitaskrTime = require('../utils/unitaskr-time');
-var io = require('socket.io-client');
+var $ = require('jquery'),
+    Backbone = require('backbone'),
+    CompletedTask = require('../models/completed-task'),
+    UnitaskrTime = require('../utils/unitaskr-time'),
+    io = require('socket.io-client'),
+    socket = io.connect(),
+    interval = 1000, // 1 FPS
+    totalSecs = 0,
+    ticks = 0,
+    then, // used later with 'now' and 'delta' for rAF
+    intervened = false, // For if we clicked cancel or stop
+    tasksReady = 0,
+    pause = false,
+    timeOnTask = 1,
+    countUpward = false,
+    $task,
+    $followingTask,
+    $followingTaskVal = null,
+    $followingTaskName,
+    $taskBar,
+    $timeBar = $('#time-bar'),
+    $updateTime,
+    $currentTaskText;
 
-var socket = io.connect();
-var total_secs = 0;
-var ticks = 0;
-var then; // used later with 'now' and 'delta' for rAF
-var intervened = false; // For if we clicked cancel or stop
 
 module.exports = Backbone.View.extend({
 
@@ -27,30 +40,26 @@ module.exports = Backbone.View.extend({
     },
 
     initialize: function() {
-        this.tasks_ready = 0;
-        this.pause = false;
-        this.timeOnTask = 1;
-        this.count_upward = false;
-        this.$task = $('#task');
-        this.$following_task = $('#following-task');
-        this.$following_task_val = null;
-        this.$task_bar = $('#task-bar');
-        this.$time_bar = $('#time-bar');
-        this.$update_time = $('#update-time');
         var that = this;
+        $task = $('#task');
+        $followingTask = $('#following-task');
+        $taskBar = $('#task-bar');
+        $timeBar = $('#time-bar');
+        $updateTime = $('#update-time');
 
+        // We listen on initialization to only create one listener
         socket.on('clocktick', function (data) {
             ticks = data.tick_count;
 
             // Use rAF, not setTimeout, to save on CPU/battery
             // when the browser tab isn't focused.
-            if (ticks < total_secs) {
+            if (ticks < totalSecs) {
                 requestAnimationFrame(function() { that.rAF_cb(that); });
             } 
 
             // Since rAF goes out of focus on tab switch (blur)
             // we still need to run the callback.
-            if (ticks >= total_secs) {
+            if (ticks >= totalSecs) {
                 that.rAF_cb(that);
             }
         });
@@ -62,39 +71,39 @@ module.exports = Backbone.View.extend({
 
     startTimer: function(e) {
         e.preventDefault(); // prevents form submission
-        var secs_in_hours = $('#hours').val() * 3600;
-        var secs_in_minutes = $('#minutes').val() * 60;
-        var secs = $('#seconds').val();
-        total_secs = (+(secs_in_hours) + 
+        var secs_in_hours = $('#hours').val() * 3600,
+            secs_in_minutes = $('#minutes').val() * 60,
+            secs = $('#seconds').val();
+        totalSecs = (+(secs_in_hours) + 
                 +(secs_in_minutes) + +(secs));
         then = Date.now();
-        this.$following_task_name = $('#following-task-name');
-        this.$following_task_val = this.$task.val();
+        $followingTaskName = $('#following-task-name');
+        $followingTaskVal = $task.val();
 
-        if (this.count_upward) {
+        if (countUpward) {
             ticks = -1;
-            total_secs = 0;
+            totalSecs = 0;
         }
 
-        if (!total_secs && !this.tasks_ready) {
-            total_secs = 1;
+        if (!totalSecs && !tasksReady) {
+            totalSecs = 1;
         }
 
-        if (this.$task.val() == '') {
+        if ($task.val() == '') {
             alert('Please enter a task.');
-            this.$task.focus();
+            $task.focus();
             return false;
         } else {
-            this.tasks_ready++;
-            this.$task.val(''); // Clear last inputted task
+            tasksReady++;
+            $task.val(''); // Clear last inputted task
             $('#current-task, #current-notes-input, ' +
               '#following-notes-input').css('display', 'block');
 
-            if (this.tasks_ready == 1) {
-                $('#current-task-text').html(this.$following_task_val);
+            if (tasksReady == 1) {
+                $('#current-task-text').html($followingTaskVal);
             }
 
-            this.$current_task_text = $('#current-task-text').html();
+            $currentTaskText = $('#current-task-text').html();
 
             // Change the task input bar to accept following task(s)
             $('#task-desc').html('Following Task ');
@@ -103,49 +112,49 @@ module.exports = Backbone.View.extend({
         }
 
         // Validate user input
-        if (total_secs == 0 && this.tasks_ready && ticks != -1) {
+        if (totalSecs == 0 && tasksReady && ticks != -1) {
             alert('Please enter a time.');
             $('#minutes').select();
             return false;
         }
 
-        this.timeOnTask = unitaskrTime.secondsToTime(total_secs);
+        timeOnTask = UnitaskrTime.secondsToTime(totalSecs);
 
         // Set the text for what the following task will be. '\u2014' is 
         // unicode for &mdash;
-        this.$following_task.html(this.$following_task_val + 
-            ' \u2014 Length: ' + unitaskrTime.secondsToTime(total_secs));
+        $followingTask.html($followingTaskVal + 
+            ' \u2014 Length: ' + UnitaskrTime.secondsToTime(totalSecs));
 
-        if (this.tasks_ready > 1) {
+        if (tasksReady > 1) {
             this.showTaskInputs(false);
             this.showTaskNames(true);
             this.showTimeBar(true);
 
-            // send the amount of seconds entered to the server
+            // send the amount of seconds entered to the server, etc.
             socket.emit('clockstart', {
-                'total_secs':total_secs, 
-                'count_upward':this.count_upward, 
+                'total_secs':totalSecs, 
+                'count_upward':countUpward, 
+                'interval':interval,
             });
         } 
     },
 
     rAF_cb: function(that) {
-        var count = 0;
-        var now;
-        var delta;
-        var interval = 1000; // 1 FPS
-        that.$update_time = $('#update-time');
+        var count = 0,
+            now,
+            delta;
+        $updateTime = $('#update-time');
 
-        if (ticks <= total_secs || that.count_upward) {
-            var now = Date.now();
+        if (ticks <= totalSecs || countUpward) {
+            now = Date.now();
             delta = now - then;
 
-            if (delta > interval && !that.pause) {
+            if (delta > interval && !pause) {
                 then = now - (delta % interval);
-                count = that.count_upward ? total_secs+ticks : total_secs-ticks;
+                count = countUpward ? totalSecs+ticks : totalSecs-ticks;
 
                 // Render the clock animation
-                that.$update_time.html(unitaskrTime.secondsToTime(count));
+                $updateTime.html(UnitaskrTime.secondsToTime(count));
             }
 
             that.checkTimer();
@@ -156,22 +165,22 @@ module.exports = Backbone.View.extend({
     },
 
     checkTimer: function() {
-        if (ticks >= total_secs && !this.count_upward) {
+        if (ticks >= totalSecs && !countUpward) {
 
-            if (this.tasks_ready && !intervened) {
+            if (tasksReady && !intervened) {
                 this.alarm();
             }
 
             // Apppend the current task to the Completed Tasks box:
-            if (this.$current_task_text != '') {
+            if ($currentTaskText != '') {
                 CompletedTask.set({
-                    task: this.$current_task_text,
-                    timeSpent: this.timeOnTask,
-                    timeEnded: unitaskrTime.getTimeNow(),
+                    task: $currentTaskText,
+                    timeSpent: timeOnTask,
+                    timeEnded: UnitaskrTime.getTimeNow(),
                 });
             }
 
-            $('#current-task-text').html(this.$following_task_val);
+            $('#current-task-text').html($followingTaskVal);
             this.updateNotes();
             this.cleanUp();
         }
@@ -185,7 +194,7 @@ module.exports = Backbone.View.extend({
         }
 
         // TODO: make this configurable so they only get a sound
-        alert('Time to ' + this.$following_task_val);
+        alert('Time to ' + $followingTaskVal);
     },
 
     // Moves the following task's notes to the current task's notes
@@ -206,16 +215,16 @@ module.exports = Backbone.View.extend({
 
     editTask: function(e) {
         e.preventDefault();
-        var id_name = $(e.target).data('target');
-        var msg = $(e.target).data('msg');
-        var cur = $('#' + id_name).html();
-        var mdash_index;
+        var id_name = $(e.target).data('target'),
+            msg = $(e.target).data('msg'),
+            cur = $('#' + id_name).html(),
+            mdash_index;
         
         if (cur.indexOf('\u2014') != -1) { // Edit following task
             mdash_index = cur.indexOf('\u2014');
             cur = prompt(msg, cur.substring(0, mdash_index));
             if (cur != null && cur != '') {
-                cur += ' \u2014 Length: ' + this.timeOnTask;
+                cur += ' \u2014 Length: ' + timeOnTask;
             }
         } else {
             cur = prompt(msg, cur); // Edit current task
@@ -228,9 +237,9 @@ module.exports = Backbone.View.extend({
         if (cur != '') {
             $('#' + id_name).html(cur);
             if (id_name == 'current-task-text') {
-                this.$current_task_text = cur;
+                $currentTaskText = cur;
             } else if (id_name == 'following-task') {
-                this.$following_task_val = cur.substring(0, mdash_index);
+                $followingTaskVal = cur.substring(0, mdash_index);
             }
         } else {
             alert('Please enter a task');
@@ -240,49 +249,49 @@ module.exports = Backbone.View.extend({
 
     countUpward: function(e) {
         e.preventDefault();
-        this.count_upward = true;
+        countUpward = true;
         $('#timer-input').css('display', 'none');
     },
 
     stopCountdown: function(e) {
         e.preventDefault();
         intervened = true;
-        this.count_upward = false;
+        countUpward = false;
         this.showTimeBar(false);
         // Recalulate how much time was spent on the task:
-        this.timeOnTask = unitaskrTime.secondsToTime(ticks);
+        timeOnTask = UnitaskrTime.secondsToTime(ticks);
         socket.emit('clockstop');
-        ticks = total_secs; // for checkTimer
+        ticks = totalSecs; // for checkTimer
         this.checkTimer();
         this.cleanUp();
     },
 
     pauseCountdown: function(e) {
         e.preventDefault();
-        this.pause ^= true; // Toggle
-        socket.emit('clockpause', {'pause':this.pause});
+        pause ^= true; // Toggle
+        socket.emit('clockpause', {'pause':pause});
     },
 
     cancelCountdown: function(e) {
         e.preventDefault();
         intervened = true;
         this.showTimeBar(false);
-        this.count_upward = false;
+        countUpward = false;
         socket.emit('clockstop');
         this.cleanUp();
     },
 
     showTaskInputs: function(toggle) {
-        this.$task_bar.css('display', (toggle ? 'block' : 'none'));
+        $taskBar.css('display', (toggle ? 'block' : 'none'));
         document.taskbar.task.focus();
     },
 
     showTaskNames: function(toggle) {
-        this.$following_task_name.css('display', (toggle ? 'block' : 'none'));
+        $followingTaskName.css('display', (toggle ? 'block' : 'none'));
     },
 
     showTimeBar: function(toggle) {
-        this.$time_bar.css('display', (toggle ? 'block' : 'none'));
+        $timeBar.css('display', (toggle ? 'block' : 'none'));
     },
 
 });
