@@ -91,6 +91,20 @@ legend {
     display: none;
 }
 
+                            /* --- DnD --- */
+
+[draggable] {
+    cursor: move;
+
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.over {
+    border: 2px dashed #000;
+}
 
 
                             /* --- About --- */
