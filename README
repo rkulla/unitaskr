@@ -11,7 +11,7 @@ It's easy to get caught up doing one task so much that you lose track of time an
 
 I'm a fan of the Pomodoro technique, so I made the timer default to 25 minutes. If you don't like the Pomodoro technique, that's fine too. Unitaskr was designed to allow for any timeboxing method you prefer. For example, sometimes I prefer to use the 50/10 rule. This is where you do something for 50 minutes straight and then take a 10 minute break.
 
-Note that Unitaskr currently uses localStorage to save a copy of your todo list for offline viewing or to preserve it if you refresh the page. Other things besides the todo list may disappear from the page if you refresh.
+Note that Unitaskr currently uses localStorage to save a copy of your todo list for offline viewing or to preserve it if you refresh the page. The todo list also supports Drag and Drop, so you can re-order the list.
 
 Usage
 =====
