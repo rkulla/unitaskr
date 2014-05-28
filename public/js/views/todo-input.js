@@ -7,7 +7,7 @@ var Todos = require('../collections/todos');
 // This view gets todo input from the todo form
 module.exports = Backbone.View.extend({
 
-    el: '#todo',
+    el: '#todo', // section containing the todo form
 
     events: {
         'submit form': 'setTodoTask',
@@ -16,9 +16,9 @@ module.exports = Backbone.View.extend({
     setTodoTask: function(e) {
         e.preventDefault();
 
-        // Trigger the 'add' event in AppView
-        // which calls the TodoView
-        Todos.add({task: $('#todo-task').val()});
+        // Triggers 'add' event in AppView
+        // Note: this only happens for NEW items, not existing.
+        Todos.add({task:$('#todo-task').val(), timestamp:new Date().getTime()});
     },
 
 });

@@ -1,15 +1,21 @@
 'use strict';
 
-var Backbone = require('backbone');
+var Backbone = require('backbone'),
+    Todo = require('../models/todo'),
+    TodoList;
+
 Backbone.LocalStorage = require('backbone.localstorage');
-var Todo = require('../models/todo');
 
-var TodoList = Backbone.Collection.extend({
-
-    localStorage: new Backbone.LocalStorage('TodoListCollection'), 
+TodoList = Backbone.Collection.extend({
 
     model: Todo,
 
+    localStorage: new Backbone.LocalStorage('TodoListCollection'),
+
+    // Since localStorage values are stored as a hash table, which
+    // is effectively unordered, we'll sort by added timestamp.
+    comparator: 'timestamp',
+
 });
 
-module.exports = new TodoList();
+module.exports = new TodoList;

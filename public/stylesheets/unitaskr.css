@@ -91,22 +91,6 @@ legend {
     display: none;
 }
 
-                            /* --- DnD --- */
-
-[draggable] {
-    cursor: move;
-
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-.over {
-    border: 2px dashed #000;
-}
-
-
                             /* --- About --- */
 
 #about {
@@ -278,3 +262,20 @@ a:active, #next-link:active, #delete-link:active {
     background: #2E5481;
     border: solid 1px #203E5F;
 }
+
+                            /* --- DnD --- */
+
+[draggable] {
+    cursor: move;
+
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.over {
+    border: 2px dashed #000;
+}
+
+

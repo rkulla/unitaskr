@@ -1,4 +1,5 @@
 'use strict';
+// Also see js/views/todo-input.js
 
 var $ = require('jquery'),
     Backbone = require('backbone'),
@@ -26,24 +27,35 @@ module.exports = Backbone.View.extend({
     },
 
     initialize: function() {
+        this.template = _.template($('#todoTaskTemplate').html());
         $taskbarTask = $('#taskbar #task');
     },
 
     render: function() {
         $('#todo-task').val('');
-        var $todoTaskTemplate = _.template($('#todoTaskTemplate').html()),
-            modeltask = this.model.get('task');
+        // By the time this.model.get() is called here, the value it 
+        // contains should already exist, if it was passed to the add() 
+        // method in the todo-input.js view
+        var modeltask = this.model.get('task');
 
-        this.$el.append($todoTaskTemplate);
+        // Append to the <li> the template that contains the delete, 
+        // do next & checkbox buttons. Then append the task name to it
+        this.$el.append(this.template);
         this.$el.append(modeltask);
-        this.model.save(modeltask); // save a copy to localStorage
-        return this;
+
+        return this; // return to be called externally/chained
     },
 
     deleteTodoTask: function(e) {
         e.preventDefault();
         this.remove(); // remove this `<li>` view
-        this.model.destroy(); // delete from localStorage too
+
+        // Delete from localStorage too
+        //
+        // Passing {wait:true} is important because the
+        // the sync event gets called and we want to make
+        // sure the model is destroyed first.
+        this.model.destroy({wait:true}); 
     },
 
     setNextTodoTask: function(e) {
@@ -80,7 +92,7 @@ module.exports = Backbone.View.extend({
 
         $('li.over').each(function(index) {
             $(this).removeClass('over');
-        })
+        });
     },
     
     handleDrop: function(e) {
@@ -93,5 +105,5 @@ module.exports = Backbone.View.extend({
             this.$el.html(e.originalEvent.dataTransfer.getData('text/plain'));
         }
     },
-    
+
 });
