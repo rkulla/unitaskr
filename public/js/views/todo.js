@@ -5,6 +5,8 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     _ = require('underscore'),
     $taskbarTask,
+    $todoTaskTemplate,
+    Todos = require('../collections/todos'),
     dragSrcEl = null;
 
 module.exports = Backbone.View.extend({
@@ -27,7 +29,9 @@ module.exports = Backbone.View.extend({
     },
 
     initialize: function() {
-        this.template = _.template($('#todoTaskTemplate').html());
+        $todoTaskTemplate = $('#todoTaskTemplate');
+        this.templateHTML = $todoTaskTemplate.html();
+        this.template = _.template(this.templateHTML);
         $taskbarTask = $('#taskbar #task');
     },
 
@@ -97,12 +101,36 @@ module.exports = Backbone.View.extend({
     
     handleDrop: function(e) {
         e.stopPropagation();
+        var old_el,
+            new_el,
+            old_task,
+            new_task,
+            found_new,
+            found_old,
+            new_timestamp,
+            old_timestamp;
 
-        // Don't do anything if dropping the same column we're dragging
+        // Swap the elements. Don't do anything if dropping the 
+        // same column we're dragging.
         if (dragSrcEl != this.$el) {
-            // swap the elements
-            dragSrcEl.html(this.$el.html());
-            this.$el.html(e.originalEvent.dataTransfer.getData('text/plain'));
+            // Swap the `li` elements in the view
+            new_el = this.$el.html();
+            dragSrcEl.html(new_el);
+            old_el = e.originalEvent.dataTransfer.getData('text/plain');
+            this.$el.html(old_el);
+
+            // Extract task names from html
+            new_task = new_el.slice(this.templateHTML.length).trim();
+            old_task = old_el.slice(this.templateHTML.length).trim();
+
+            found_new = Todos.findWhere({'task': new_task})
+            found_old = Todos.findWhere({'task': old_task})
+
+            // Swap timestamps to remember positions in localStorage
+            new_timestamp = found_new.get('timestamp');
+            old_timestamp = found_old.get('timestamp');
+            found_new.save({timestamp:old_timestamp, dontSync:true});
+            found_old.save({timestamp:new_timestamp, dontSync:true});
         }
     },
 

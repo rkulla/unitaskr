@@ -17562,8 +17562,8 @@ module.exports = Backbone.View.extend({
         // Initialize all the views
         this.render();
 
-        // Load any preexisting todos that might be in localStorage.
-        // Runs 'add' event, which calls this.addToDoTask for each task
+        // Load preexisting todos that may be in localStorage.
+        // Runs `add` event, which calls addToDoTask for each task.
         // The Todos collection is empty until we run this.
         Todos.fetch();
     },
@@ -17585,13 +17585,22 @@ module.exports = Backbone.View.extend({
     },
 
     addTodoTasks: function(items) {
-       $('#todo-list').empty();
+        
+        // If the item already exists in local storage, return
+        // immediately. Important for drag and drop to render
+        // because updating timestamps triggers `sync` events.
+        if (typeof items.attributes !== 'undefined' &&
+            typeof items.attributes.dontSync !== 'undefined') {
+            return false;
+        }
 
-       Todos.each(function(item) {
-           // Do the final append of the todo `li`
-           var view = new TodoView({model: item});
-           $('#todo-list').append(view.render().el);
-       });
+        $('#todo-list').empty();
+
+        Todos.each(function(item) {
+            // Do the final append of the todo `li`
+            var view = new TodoView({model: item});
+            $('#todo-list').append(view.render().el);
+        });
     },
 
 });
@@ -17986,6 +17995,8 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     _ = require('underscore'),
     $taskbarTask,
+    $todoTaskTemplate,
+    Todos = require('../collections/todos'),
     dragSrcEl = null;
 
 module.exports = Backbone.View.extend({
@@ -18008,7 +18019,9 @@ module.exports = Backbone.View.extend({
     },
 
     initialize: function() {
-        this.template = _.template($('#todoTaskTemplate').html());
+        $todoTaskTemplate = $('#todoTaskTemplate');
+        this.templateHTML = $todoTaskTemplate.html();
+        this.template = _.template(this.templateHTML);
         $taskbarTask = $('#taskbar #task');
     },
 
@@ -18078,15 +18091,39 @@ module.exports = Backbone.View.extend({
     
     handleDrop: function(e) {
         e.stopPropagation();
+        var old_el,
+            new_el,
+            old_task,
+            new_task,
+            found_new,
+            found_old,
+            new_timestamp,
+            old_timestamp;
 
-        // Don't do anything if dropping the same column we're dragging
+        // Swap the elements. Don't do anything if dropping the 
+        // same column we're dragging.
         if (dragSrcEl != this.$el) {
-            // swap the elements
-            dragSrcEl.html(this.$el.html());
-            this.$el.html(e.originalEvent.dataTransfer.getData('text/plain'));
+            // Swap the `li` elements in the view
+            new_el = this.$el.html();
+            dragSrcEl.html(new_el);
+            old_el = e.originalEvent.dataTransfer.getData('text/plain');
+            this.$el.html(old_el);
+
+            // Extract task names from html
+            new_task = new_el.slice(this.templateHTML.length).trim();
+            old_task = old_el.slice(this.templateHTML.length).trim();
+
+            found_new = Todos.findWhere({'task': new_task})
+            found_old = Todos.findWhere({'task': old_task})
+
+            // Swap timestamps to remember positions in localStorage
+            new_timestamp = found_new.get('timestamp');
+            old_timestamp = found_old.get('timestamp');
+            found_new.save({timestamp:old_timestamp, dontSync:true});
+            found_old.save({timestamp:new_timestamp, dontSync:true});
         }
     },
 
 });
 
-},{"backbone":5,"jquery":7,"underscore":9}]},{},[10])
+},{"../collections/todos":11,"backbone":5,"jquery":7,"underscore":9}]},{},[10])

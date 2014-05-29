@@ -23,8 +23,8 @@ module.exports = Backbone.View.extend({
         // Initialize all the views
         this.render();
 
-        // Load any preexisting todos that might be in localStorage.
-        // Runs 'add' event, which calls this.addToDoTask for each task
+        // Load preexisting todos that may be in localStorage.
+        // Runs `add` event, which calls addToDoTask for each task.
         // The Todos collection is empty until we run this.
         Todos.fetch();
     },
@@ -46,13 +46,22 @@ module.exports = Backbone.View.extend({
     },
 
     addTodoTasks: function(items) {
-       $('#todo-list').empty();
+        
+        // If the item already exists in local storage, return
+        // immediately. Important for drag and drop to render
+        // because updating timestamps triggers `sync` events.
+        if (typeof items.attributes !== 'undefined' &&
+            typeof items.attributes.dontSync !== 'undefined') {
+            return false;
+        }
 
-       Todos.each(function(item) {
-           // Do the final append of the todo `li`
-           var view = new TodoView({model: item});
-           $('#todo-list').append(view.render().el);
-       });
+        $('#todo-list').empty();
+
+        Todos.each(function(item) {
+            // Do the final append of the todo `li`
+            var view = new TodoView({model: item});
+            $('#todo-list').append(view.render().el);
+        });
     },
 
 });
