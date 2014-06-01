@@ -7,19 +7,16 @@ var $ = require('jquery'),
     $taskbarTask,
     $todoTaskTemplate,
     Todos = require('../collections/todos'),
+    startTag = '<span draggable="true">',
+    endTag = '</span>',
     dragSrcEl = null;
 
 module.exports = Backbone.View.extend({
 
     tagName: 'li',
 
-    attributes: function () {
-        return { 'draggable' : 'true' }
-    },
-
     events: {
         'click .deleteTodoTask': 'deleteTodoTask',
-        'click .nextTodoTask': 'setNextTodoTask',
         'dragstart': 'handleDragStart',
         'dragenter': 'handleDragEnter',
         'dragleave': 'handleDragLeave',
@@ -43,9 +40,9 @@ module.exports = Backbone.View.extend({
         var modeltask = this.model.get('task');
 
         // Append to the <li> the template that contains the delete, 
-        // do next & checkbox buttons. Then append the task name to it
+        // checkbox buttons. Then append the task name to it
         this.$el.append(this.template);
-        this.$el.append(modeltask);
+        this.$el.append(startTag + modeltask + endTag);
 
         return this; // return to be called externally/chained
     },
@@ -62,20 +59,15 @@ module.exports = Backbone.View.extend({
         this.model.destroy({wait:true}); 
     },
 
-    setNextTodoTask: function(e) {
-        e.preventDefault();
-        var modeltask = this.model.get('task');
-        $taskbarTask.val(modeltask);
-        $taskbarTask.focus();
-    },
-
     handleDragStart: function(e) {
         this.$el.css('opacity','0.4'); 
         dragSrcEl = this.$el;
-        // e is jQuery's event object, e.originalEvent is the one we want
-        e.originalEvent.dataTransfer.effectAllowed = 'move'; 
-        // Set the drop payload
-        e.originalEvent.dataTransfer.setData('text/plain', this.$el.html());
+        var taskname = dragSrcEl.html().slice(this.templateHTML.length).trim(),
+            nospan = taskname.replace(startTag, '').replace(endTag, '');
+
+        // Set the drop payload.
+        // e is jQuery's event object so e.originalEvent what we want.
+        e.originalEvent.dataTransfer.setData('text/plain', nospan);
     },
 
     handleDragEnter: function(e) {
@@ -91,20 +83,15 @@ module.exports = Backbone.View.extend({
         e.originalEvent.dataTransfer.dropEffect = 'move';
     },
 
-    handleDragEnd: function(e) {
-        this.$el.css('opacity', '1.0');
-
-        $('li.over').each(function(index) {
-            $(this).removeClass('over');
-        });
-    },
-    
     handleDrop: function(e) {
         e.stopPropagation();
-        var old_el,
-            new_el,
+        var old_src,
             old_task,
+            target_html,
             new_task,
+            new_content,
+            new_src,
+            pattern,
             found_new,
             found_old,
             new_timestamp,
@@ -113,25 +100,37 @@ module.exports = Backbone.View.extend({
         // Swap the elements. Don't do anything if dropping the 
         // same column we're dragging.
         if (dragSrcEl != this.$el) {
-            // Swap the `li` elements in the view
-            new_el = this.$el.html();
-            dragSrcEl.html(new_el);
-            old_el = e.originalEvent.dataTransfer.getData('text/plain');
-            this.$el.html(old_el);
+            // Swap just the <span> tags of the `li` elements
+            target_html = this.$el.html();
+            new_content = target_html.slice(this.templateHTML.length).trim();
+            pattern = new RegExp(startTag+'(.*?)'+endTag);
+            new_src = dragSrcEl.html().replace(pattern, new_content);
+            dragSrcEl.html(new_src);
 
+            old_src = e.originalEvent.dataTransfer.getData('text/plain');
+            this.$el.html(target_html.replace(pattern, startTag+old_src+endTag));
+            
             // Extract task names from html
-            new_task = new_el.slice(this.templateHTML.length).trim();
-            old_task = old_el.slice(this.templateHTML.length).trim();
-
-            found_new = Todos.findWhere({'task': new_task})
-            found_old = Todos.findWhere({'task': old_task})
+            new_task = target_html.match(pattern)[1];
+            old_task = old_src.replace(pattern, '');
 
             // Swap timestamps to remember positions in localStorage
+            found_new = Todos.findWhere({'task': new_task})
+            found_old = Todos.findWhere({'task': old_task})
             new_timestamp = found_new.get('timestamp');
             old_timestamp = found_old.get('timestamp');
             found_new.save({timestamp:old_timestamp, dontSync:true});
             found_old.save({timestamp:new_timestamp, dontSync:true});
         }
+
+        this.handleDragEnd(); // ensure it gets called on drops
     },
 
+    handleDragEnd: function(e) {
+        $('li').each(function(index) {
+            $(this).css('opacity', '1.0');
+            $(this).removeClass('over');
+        });
+    },
+    
 });
