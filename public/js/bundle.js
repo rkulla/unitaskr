@@ -17454,6 +17454,15 @@ var Backbone = require('backbone');
 Backbone.$ = $; // needed
 
 module.exports = Backbone.Model.extend({
+    defaults: function() {
+        return {
+            done: false
+        };
+    },
+
+    toggle: function() {
+        this.save({done: !this.get('done'), dontSync: true});
+    }
 }); 
 
 },{"backbone":5,"jquery":7}],14:[function(require,module,exports){
@@ -18007,12 +18016,18 @@ module.exports = Backbone.View.extend({
 
     events: {
         'click .deleteTodoTask': 'deleteTodoTask',
+        'click input[type=checkbox]': 'toggleDone',
         'dragstart': 'handleDragStart',
         'dragenter': 'handleDragEnter',
         'dragleave': 'handleDragLeave',
         'dragover': 'handleDragOver',
         'dragend': 'handleDragEnd',
         'drop': 'handleDrop',
+    },
+
+    // toggle in localStorage
+    toggleDone: function(e) {
+        this.model.toggle(); 
     },
 
     initialize: function() {
@@ -18033,6 +18048,10 @@ module.exports = Backbone.View.extend({
         // checkbox buttons. Then append the task name to it
         this.$el.append(this.template);
         this.$el.append(startTag + modeltask + endTag);
+
+        if (this.model.get('done')) {
+            this.$el.find('input').prop('checked', true);
+        }
 
         return this; // return to be called externally/chained
     },
