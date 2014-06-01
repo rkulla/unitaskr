@@ -101,6 +101,8 @@ module.exports = Backbone.View.extend({
             new_task,
             new_content,
             new_src,
+            src_was_checked,
+            target_was_checked,
             pattern,
             found_new,
             found_old,
@@ -110,16 +112,26 @@ module.exports = Backbone.View.extend({
         // Swap the elements. Don't do anything if dropping the 
         // same column we're dragging.
         if (dragSrcEl != this.$el) {
+            src_was_checked = dragSrcEl.find('input').prop('checked');
+            target_was_checked = this.$el.find('input').prop('checked');
+
             // Swap just the <span> tags of the `li` elements
             target_html = this.$el.html();
             new_content = target_html.slice(this.templateHTML.length).trim();
             pattern = new RegExp(startTag+'(.*?)'+endTag);
             new_src = dragSrcEl.html().replace(pattern, new_content);
             dragSrcEl.html(new_src);
-
             old_src = e.originalEvent.dataTransfer.getData('text/plain');
             this.$el.html(target_html.replace(pattern, startTag+old_src+endTag));
-            
+
+            // Re-add any existing done check marks
+            if (src_was_checked) {
+                this.$el.find('input').prop('checked', true);
+            }
+            if (target_was_checked) {
+                dragSrcEl.find('input').prop('checked', true);
+            }
+
             // Extract task names from html
             new_task = target_html.match(pattern)[1];
             old_task = old_src.replace(pattern, '');
