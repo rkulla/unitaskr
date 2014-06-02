@@ -12,6 +12,6 @@ module.exports = Backbone.Model.extend({
     },
 
     toggle: function() {
-        this.save({done: !this.get('done'), dontSync: true});
+        this.save({done: !this.get('done')});
     }
 }); 

@@ -19,6 +19,7 @@ module.exports = Backbone.View.extend({
         // 'add' is when a model gets added to a collection
         this.listenTo(Todos, 'add', this.addTodoTask);
         this.listenTo(Todos, 'sync', this.addTodoTasks);
+        this.listenTo(Todos, 'sort', this.addTodoTasks);
 
         // Initialize all the views
         this.render();
@@ -47,14 +48,6 @@ module.exports = Backbone.View.extend({
 
     addTodoTasks: function(items) {
         
-        // If the item already exists in local storage, return
-        // immediately. Important for drag and drop to render
-        // because updating timestamps triggers `sync` events.
-        if (typeof items.attributes !== 'undefined' &&
-            typeof items.attributes.dontSync !== 'undefined') {
-            return false;
-        }
-
         $('#todo-list').empty();
 
         Todos.each(function(item) {

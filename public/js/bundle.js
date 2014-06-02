@@ -17461,7 +17461,7 @@ module.exports = Backbone.Model.extend({
     },
 
     toggle: function() {
-        this.save({done: !this.get('done'), dontSync: true});
+        this.save({done: !this.get('done')});
     }
 }); 
 
@@ -17567,6 +17567,7 @@ module.exports = Backbone.View.extend({
         // 'add' is when a model gets added to a collection
         this.listenTo(Todos, 'add', this.addTodoTask);
         this.listenTo(Todos, 'sync', this.addTodoTasks);
+        this.listenTo(Todos, 'sort', this.addTodoTasks);
 
         // Initialize all the views
         this.render();
@@ -17595,14 +17596,6 @@ module.exports = Backbone.View.extend({
 
     addTodoTasks: function(items) {
         
-        // If the item already exists in local storage, return
-        // immediately. Important for drag and drop to render
-        // because updating timestamps triggers `sync` events.
-        if (typeof items.attributes !== 'undefined' &&
-            typeof items.attributes.dontSync !== 'undefined') {
-            return false;
-        }
-
         $('#todo-list').empty();
 
         Todos.each(function(item) {
@@ -18140,11 +18133,15 @@ module.exports = Backbone.View.extend({
             found_old = Todos.findWhere({'task': old_task})
             new_timestamp = found_new.get('timestamp');
             old_timestamp = found_old.get('timestamp');
-            found_new.save({timestamp:old_timestamp, dontSync:true});
-            found_old.save({timestamp:new_timestamp, dontSync:true});
+            found_new.save({timestamp:old_timestamp});
+            found_old.save({timestamp:new_timestamp});
+
+            // Resorting after dropping allows this.model to be correct
+            // when you run .destroy, etc. And shows the swap immediately.
+            Todos.sort(); 
         }
 
-        this.handleDragEnd(); // ensure it gets called on drops
+        this.$el.trigger('dragend'); // ensure handleDragEnd is called
     },
 
     handleDragEnd: function(e) {

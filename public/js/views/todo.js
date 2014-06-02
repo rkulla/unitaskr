@@ -141,11 +141,15 @@ module.exports = Backbone.View.extend({
             found_old = Todos.findWhere({'task': old_task})
             new_timestamp = found_new.get('timestamp');
             old_timestamp = found_old.get('timestamp');
-            found_new.save({timestamp:old_timestamp, dontSync:true});
-            found_old.save({timestamp:new_timestamp, dontSync:true});
+            found_new.save({timestamp:old_timestamp});
+            found_old.save({timestamp:new_timestamp});
+
+            // Resorting after dropping allows this.model to be correct
+            // when you run .destroy, etc. And shows the swap immediately.
+            Todos.sort(); 
         }
 
-        this.handleDragEnd(); // ensure it gets called on drops
+        this.$el.trigger('dragend'); // ensure handleDragEnd is called
     },
 
     handleDragEnd: function(e) {
