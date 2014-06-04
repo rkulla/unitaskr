@@ -94,7 +94,10 @@ module.exports = Backbone.View.extend({
     },
 
     handleDrop: function(e) {
-        e.stopPropagation();
+        // Diff browsers will redirect if we don't use both
+        if (e.preventDefault) { e.preventDefault(); }
+        if (e.stopPropagation) { e.stopPropagation(); }
+
         var old_src,
             old_task,
             target_html,
@@ -150,6 +153,8 @@ module.exports = Backbone.View.extend({
         }
 
         this.$el.trigger('dragend'); // ensure handleDragEnd is called
+
+        return false;
     },
 
     handleDragEnd: function(e) {
