@@ -33,6 +33,9 @@ http.listen(app.get('port'), function(){
 });
 
 
+// Disable DEBUG output in console for websockets
+io.set('log level', 1);
+
 // Socket.io Handler
 io.sockets.on('connection', function (socket) {
    var tick_count = 0,
