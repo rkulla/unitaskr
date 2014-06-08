@@ -17572,15 +17572,15 @@ module.exports = Backbone.View.extend({
 'use strict';
 // This AppView is the top-level UI component
 
-var Backbone = require('backbone');
-var $ = require('jquery');
-var Todos = require('../collections/todos');
-var AboutView = require('./about');
-var TaskbarView = require('./taskbar');
-var NotesView = require('./notes');
-var TodoInputView = require('./todo-input');
-var TodoView = require('./todo');
-var CompletedTasksView = require('./completed-tasks');
+var Backbone = require('backbone'),
+    $ = require('jquery'),
+    Todos = require('../collections/todos'),
+    AboutView = require('./about'),
+    TaskbarView = require('./taskbar'),
+    NotesView = require('./notes'),
+    TodoInputView = require('./todo-input'),
+    TodoView = require('./todo'),
+    CompletedTasksView = require('./completed-tasks');
 
 module.exports = Backbone.View.extend({
 
@@ -17589,7 +17589,6 @@ module.exports = Backbone.View.extend({
         // which also gets handled in the todo-input View
         // 'add' is when a model gets added to a collection
         this.listenTo(Todos, 'add', this.addTodoTask);
-        this.listenTo(Todos, 'sync', this.addTodoTasks);
         this.listenTo(Todos, 'sort', this.addTodoTasks);
 
         // Initialize all the views
@@ -17612,19 +17611,22 @@ module.exports = Backbone.View.extend({
     // When new tasks are input individually, save 
     // them to localStorage.
     addTodoTask: function(todo) {
-        // save() triggers a 'sync' event, which calls 
-        // `addTodoTasks` to do the DOM appending.
+        // save() triggers a `sync` and a `sort` event.
+        // Our sort event handler calls `addTodoTasks` 
+        // to do the DOM appending.
         todo.save({task:todo.get('task')}); 
     },
 
     addTodoTasks: function(items) {
-        
-        $('#todo-list').empty();
+        var view,
+            $todoList = $('#todo-list');
+
+        $todoList.empty();
 
         Todos.each(function(item) {
             // Do the final append of the todo `li`
-            var view = new TodoView({model: item});
-            $('#todo-list').append(view.render().el);
+            view = new TodoView({model: item});
+            $todoList.append(view.render().el);
         });
     },
 
