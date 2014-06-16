@@ -25,18 +25,22 @@ module.exports = {
         return compiledTemplate;
     },
 
-    secondsToTime: function(total_secs) {
-        var hours = Math.floor(total_secs / 3600),
-            mins = Math.floor((total_secs % 3600) / 60),
-            secs = Math.round((((total_secs % 3600) / 60) - mins) * 60);
+    secondsToTime: function(secs) {
+        var times = {
+              hours: this.zeroPad(Math.floor(secs/3600)),
+              mins: this.zeroPad(Math.floor((secs % 3600)/60)),
+        };
+        times.secs = this.zeroPad(Math.round((((secs % 3600)/60) - 
+                        times.mins)*60))
+        return times;
+    },
 
+    secondsToTimeTemplate: function(secs) {
+        var times = this.secondsToTime(secs);
         return _.template('{{hours}}{{h}} {{mins}}{{m}} {{secs}}{{s}}', {
-            hours: this.zeroPad(hours),
-            h: this.small('h'),
-            mins: this.zeroPad(mins),
-            m: this.small('m'),
-            secs: this.zeroPad(secs),
-            s: this.small('s')
+            hours: times.hours, h: this.small('h'),
+            mins: times.mins, m: this.small('m'),
+            secs: times.secs, s: this.small('s')
         });
     },
 

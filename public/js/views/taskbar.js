@@ -118,12 +118,12 @@ module.exports = Backbone.View.extend({
             return false;
         }
 
-        timeOnTask = UnitaskrTime.secondsToTime(totalSecs);
+        timeOnTask = UnitaskrTime.secondsToTimeTemplate(totalSecs);
 
         // Set the text for what the following task will be. '\u2014' is 
         // unicode for &mdash;
         $followingTask.html($followingTaskVal + 
-            ' \u2014 Length: ' + UnitaskrTime.secondsToTime(totalSecs));
+            ' \u2014 Length: ' + UnitaskrTime.secondsToTimeTemplate(totalSecs));
 
         if (tasksReady > 1) {
             this.showTaskInputs(false);
@@ -154,7 +154,7 @@ module.exports = Backbone.View.extend({
                 count = countUpward ? totalSecs+ticks : totalSecs-ticks;
 
                 // Render the clock animation
-                $updateTime.html(UnitaskrTime.secondsToTime(count));
+                $updateTime.html(UnitaskrTime.secondsToTimeTemplate(count));
             }
 
             that.checkTimer();
@@ -259,7 +259,7 @@ module.exports = Backbone.View.extend({
         countUpward = false;
         this.showTimeBar(false);
         // Recalulate how much time was spent on the task:
-        timeOnTask = UnitaskrTime.secondsToTime(ticks);
+        timeOnTask = UnitaskrTime.secondsToTimeTemplate(ticks);
         socket.emit('clockstop');
         ticks = totalSecs; // for checkTimer
         this.checkTimer();

@@ -17493,18 +17493,22 @@ module.exports = {
         return compiledTemplate;
     },
 
-    secondsToTime: function(total_secs) {
-        var hours = Math.floor(total_secs / 3600),
-            mins = Math.floor((total_secs % 3600) / 60),
-            secs = Math.round((((total_secs % 3600) / 60) - mins) * 60);
+    secondsToTime: function(secs) {
+        var times = {
+              hours: this.zeroPad(Math.floor(secs/3600)),
+              mins: this.zeroPad(Math.floor((secs % 3600)/60)),
+        };
+        times.secs = this.zeroPad(Math.round((((secs % 3600)/60) - 
+                        times.mins)*60))
+        return times;
+    },
 
+    secondsToTimeTemplate: function(secs) {
+        var times = this.secondsToTime(secs);
         return _.template('{{hours}}{{h}} {{mins}}{{m}} {{secs}}{{s}}', {
-            hours: this.zeroPad(hours),
-            h: this.small('h'),
-            mins: this.zeroPad(mins),
-            m: this.small('m'),
-            secs: this.zeroPad(secs),
-            s: this.small('s')
+            hours: times.hours, h: this.small('h'),
+            mins: times.mins, m: this.small('m'),
+            secs: times.secs, s: this.small('s')
         });
     },
 
@@ -17635,10 +17639,13 @@ module.exports = Backbone.View.extend({
 },{"../collections/todos":11,"./about":15,"./completed-tasks":17,"./notes":18,"./taskbar":19,"./todo":21,"./todo-input":20,"backbone":5,"jquery":7}],17:[function(require,module,exports){
 'use strict';
 
-var $ = require('jquery');
-var Backbone = require('backbone');
-var _ = require('underscore');
-var CompletedTask = require('../models/completed-task');
+var $ = require('jquery'),
+    Backbone = require('backbone'),
+    _ = require('underscore'),
+    io = require('socket.io-client'),
+    socket = io.connect(),
+    CompletedTask = require('../models/completed-task');
+
 
 module.exports = Backbone.View.extend({
 
@@ -17651,14 +17658,17 @@ module.exports = Backbone.View.extend({
     },
 
     render: function() {
-        var template = _.template($('#completedTaskTemplate').html(), this.model.toJSON());
+        var model_json = this.model.toJSON();
+        var template = _.template($('#completedTaskTemplate').html(), model_json);
         this.$el.append(template);
+        socket.emit('log_completed', model_json); 
+
         return this;
     },
 
 });
 
-},{"../models/completed-task":12,"backbone":5,"jquery":7,"underscore":9}],18:[function(require,module,exports){
+},{"../models/completed-task":12,"backbone":5,"jquery":7,"socket.io-client":8,"underscore":9}],18:[function(require,module,exports){
 'use strict';
 
 var $ = require('jquery');
@@ -17810,12 +17820,12 @@ module.exports = Backbone.View.extend({
             return false;
         }
 
-        timeOnTask = UnitaskrTime.secondsToTime(totalSecs);
+        timeOnTask = UnitaskrTime.secondsToTimeTemplate(totalSecs);
 
         // Set the text for what the following task will be. '\u2014' is 
         // unicode for &mdash;
         $followingTask.html($followingTaskVal + 
-            ' \u2014 Length: ' + UnitaskrTime.secondsToTime(totalSecs));
+            ' \u2014 Length: ' + UnitaskrTime.secondsToTimeTemplate(totalSecs));
 
         if (tasksReady > 1) {
             this.showTaskInputs(false);
@@ -17846,7 +17856,7 @@ module.exports = Backbone.View.extend({
                 count = countUpward ? totalSecs+ticks : totalSecs-ticks;
 
                 // Render the clock animation
-                $updateTime.html(UnitaskrTime.secondsToTime(count));
+                $updateTime.html(UnitaskrTime.secondsToTimeTemplate(count));
             }
 
             that.checkTimer();
@@ -17951,7 +17961,7 @@ module.exports = Backbone.View.extend({
         countUpward = false;
         this.showTimeBar(false);
         // Recalulate how much time was spent on the task:
-        timeOnTask = UnitaskrTime.secondsToTime(ticks);
+        timeOnTask = UnitaskrTime.secondsToTimeTemplate(ticks);
         socket.emit('clockstop');
         ticks = totalSecs; // for checkTimer
         this.checkTimer();

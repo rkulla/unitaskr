@@ -7,6 +7,8 @@ var express = require('express')
   , routes = require('./routes')
   , http = require('http').createServer(app)
   , io = require('socket.io').listen(http)
+  , fs = require('fs')
+  , unitaskrTime = require('./public/js/utils/unitaskr-time')
   , path = require('path');
 
 app.configure(function(){
@@ -74,6 +76,23 @@ io.sockets.on('connection', function (socket) {
 
    function cancelTimer() {
        clearInterval(timer);
-       tick_count = 0;
    }
+
+   // Log finished tasks
+   socket.on('log_completed', function (data) {
+       data.timeSpent = unitaskrTime.secondsToTime(tick_count-1);
+
+       var hours = data.timeSpent.hours,
+           mins = data.timeSpent.mins,
+           secs = data.timeSpent.secs,
+           timeSpent = hours + 'h ' + mins + 'm ' + secs + 's';
+
+       fs.appendFile('completed-tasks.log', data.task + 
+           ' - Time spent: ' + timeSpent + ' - Ended: ' + 
+           data.timeEnded + '\n');
+
+       // reset tick_count here, not in cancelTimer, since we need it
+       tick_count = 0;
+   });
+
 });
