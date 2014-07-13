@@ -2,31 +2,26 @@
 /**
  * Module dependencies.
  */
-var express = require('express')
-  , app = express()
-  , routes = require('./routes')
-  , http = require('http').createServer(app)
-  , io = require('socket.io').listen(http)
-  , fs = require('fs')
-  , unitaskrTime = require('./public/js/utils/unitaskr-time')
-  , path = require('path');
+var
+  express = require('express'),
+  app = express(),
+  routes = require('./routes'),
+  http = require('http').createServer(app),
+  errorhandler = require('errorhandler'),
+  io = require('socket.io').listen(http),
+  fs = require('fs'),
+  unitaskrTime = require('./public/js/utils/unitaskr-time'),
+  path = require('path'),
+  env = process.env;
 
-app.configure(function(){
-  app.set('port', process.env.PORT || 3000);
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
-  app.use(express.favicon());
-  app.use(express.logger('dev'));
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(app.router);
-  app.use(require('stylus').middleware(__dirname + '/public'));
-  app.use(express.static(path.join(__dirname, 'public')));
-});
+app.set('port', env.PORT || 3000);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.configure('development', function(){
-  app.use(express.errorHandler());
-});
+if (env.NODE_ENV || 'development') {
+    app.use(errorhandler());
+}
 
 app.get('/', routes.index);
 
