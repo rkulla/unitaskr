@@ -1,0 +1,10 @@
+#!/bin/sh
+
+command_exists () {
+    command -v "$1" >/dev/null 2>&1
+}
+
+if command_exists browserify ; then
+    echo 'Rebuilding bundle.js to ensure latest version';
+    browserify public/js/app.js -o public/js/bundle.js
+fi

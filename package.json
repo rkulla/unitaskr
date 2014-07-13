@@ -6,7 +6,7 @@
     "start": "node app",
     "test": "mocha",
     "build": "browserify public/js/app.js -o public/js/bundle.js",
-    "postinstall": "npm run build"
+    "postinstall": "./scripts/postinstall"
   },
   "dependencies": {
     "express": "~4.6.1",
